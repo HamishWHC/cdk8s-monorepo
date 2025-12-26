@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=.schema/config.schema.json
+domains:
+  main:
+    domain: homelab.hamishwhc.com
+    credentials:
+      provider: cloudflare
+      zoneId: $MAIN_ZONE_ID
+      apiToken: $CLOUDFLARE_API_TOKEN
+dns:
+  enable: true
+acme:
+  enable: true
+  email: hamish@hamishwhc.com
+images:
+  destination: registry.homelab.hamishwhc.com
+features:
+  monitoring:
+    enable: true

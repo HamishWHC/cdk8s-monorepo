@@ -1,0 +1,7 @@
+{
+	"yaml.schemaStore.enable": false,
+	"yaml.schemas": {
+		"apps/homelab/talos/**/*.patch.yml": "",
+		"apps/homelab/config.*.yaml": "apps/homelab/.schema/config.schema.json"
+	}
+}

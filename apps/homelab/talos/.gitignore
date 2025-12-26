@@ -1,0 +1,9 @@
+**/*.yml
+**/*.yaml
+
+!**/*.patch.yml
+!**/*.patch.yaml
+
+out
+
+.env
