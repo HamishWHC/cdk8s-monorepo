@@ -6,13 +6,13 @@
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"typecheck": "turbo run typecheck"
+		"typecheck": "turbo run typecheck",
+		"cloc": "cloc --exclude-dir=imports,dist $(git ls-files)"
 	},
 	"devDependencies": {
 		"prettier": "^3.6.2",
 		"turbo": "^2.5.8",
-		"typescript": "catalog:",
-		"cloc": "cloc --exclude-dir=imports,dist $(git ls-files)"
+		"typescript": "catalog:"
 	},
 	"workspaces": {
 		"packages": [
@@ -20,13 +20,15 @@
 			"packages/*"
 		],
 		"catalog": {
+			"arktype": "^2.1.26",
 			"cdk8s": "^2.70.28",
 			"cdk8s-cli": "^2.203.3",
 			"cdk8s-plus-32": "^2.5.7",
 			"constructs": "^10.4.3",
 			"@types/bun": "^1.3.3",
 			"eslint": "^9.34.0",
-			"typescript": "^5.9.3"
+			"typescript": "^5.9.3",
+			"cmd-ts": "^0.14.3"
 		}
 	},
 	"packageManager": "bun@1.3.0",

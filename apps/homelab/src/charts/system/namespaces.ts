@@ -1,7 +1,7 @@
 import { Chart, type ApiObjectMetadata, type ChartProps } from "cdk8s";
 import { Namespace } from "cdk8s-plus-32";
 import type { Construct } from "constructs";
-import { createContext } from "../../utils/contexts";
+import { createContext } from "cdk-typed-context";
 
 export interface NamespacesChartContextOptions {
 	defaultNamespaceName: string;

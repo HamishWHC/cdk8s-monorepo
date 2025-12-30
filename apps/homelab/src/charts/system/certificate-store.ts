@@ -1,10 +1,10 @@
+import { createContext } from "cdk-typed-context";
 import { Chart } from "cdk8s";
 import { Secret, type ISecret } from "cdk8s-plus-32";
 import type { Construct } from "constructs";
 import { getRootConstruct } from "..";
 import { Certificate } from "../../imports/cert-manager.io";
 import { ReferenceGrant, type GatewaySpecListenersTlsCertificateRefs } from "../../imports/gateway.networking.k8s.io";
-import { createContext } from "../../utils/contexts";
 import { generateName } from "../../utils/generate-name";
 import { canoniseHostname, hostnameToLabelPart } from "../../utils/hostnames";
 import type { NamespacedChartProps } from "../../utils/types";

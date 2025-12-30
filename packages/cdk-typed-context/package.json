@@ -1,5 +1,5 @@
 {
-	"name": "cdk8s-local",
+	"name": "cdk-typed-context",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -12,24 +12,15 @@
 	},
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
-		"typecheck": "tsc --noEmit",
-		"generate-config-types": "bun run ./scripts/generate-config-types.ts"
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"arktype": "catalog:",
-		"cdk8s": "catalog:",
-		"cdk8s-kbld": "workspace:*",
-		"cmd-ts": "catalog:",
-		"constructs": "catalog:",
-		"is-wsl": "^3.1.0",
-		"@repo/utils": "workspace:*"
+		"constructs": "catalog:"
 	},
 	"devDependencies": {
 		"@repo/eslint-config": "workspace:*",
 		"@repo/typescript-config": "workspace:*",
-		"@types/bun": "catalog:",
 		"eslint": "catalog:",
-		"json-schema-to-typescript": "^15.0.4",
 		"typescript": "catalog:"
 	}
 }

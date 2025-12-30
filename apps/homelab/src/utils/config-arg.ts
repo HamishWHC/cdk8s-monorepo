@@ -30,7 +30,7 @@ export const ConfigArg: Type<string, ConfigArg> = {
 };
 
 export const findFirstConfig = async (): Promise<ConfigArg> => {
-	for await (const env of COMMON_ENVIRONMENT_NAMES) {
+	for (const env of COMMON_ENVIRONMENT_NAMES) {
 		try {
 			return await ConfigArg.from(env);
 		} catch (e) {

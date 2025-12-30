@@ -1,10 +1,10 @@
+import { assert } from "@repo/utils/assert";
 import { Chart, Duration } from "cdk8s";
 import { Secret, type ISecret } from "cdk8s-plus-32";
 import { Construct } from "constructs";
 import { CA } from "../../constructs/ca";
 import { ClusterIssuer } from "../../imports/cert-manager.io";
 import { getConfig } from "../../schema/config";
-import { assert } from "../../utils/assert";
 import { makeSolver } from "../../utils/dns";
 import { getEnvironment } from "../../utils/environment";
 import { generateName } from "../../utils/generate-name";

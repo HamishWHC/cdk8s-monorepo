@@ -12,8 +12,8 @@ export const HELM_REPOS = [
 	{ repo: "openebs", url: "https://openebs.github.io/openebs" },
 ];
 
-export const addHelmRepos = async () => {
+export async function addHelmRepos() {
 	for (const { repo, url } of HELM_REPOS) {
 		await $`helm repo add ${repo} ${url}`.quiet();
 	}
-};
+}

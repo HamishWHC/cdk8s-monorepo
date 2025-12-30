@@ -1,8 +1,8 @@
+import { checkRequirements, DEFAULT_REQUIREMENTS } from "cdk8s-local/requirements";
 import { binary, command, option, optional, run } from "cmd-ts";
 import { synth } from ".";
 import { exportConfigJsonSchema } from "./schema/config";
 import { ConfigArg, findFirstConfig } from "./utils/config-arg";
-import { checkRequirements, SYNTH_REQUIRED_PROGRAMS } from "./utils/requirements";
 
 const cli = command({
 	name: "bun synth",
@@ -24,7 +24,7 @@ const cli = command({
 		}
 		const { name, config } = env;
 
-		await checkRequirements(SYNTH_REQUIRED_PROGRAMS);
+		await checkRequirements(DEFAULT_REQUIREMENTS);
 
 		synth({
 			config,

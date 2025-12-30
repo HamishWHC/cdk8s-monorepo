@@ -1,4 +1,7 @@
+import { logger } from "@repo/utils/logger";
 import { $ } from "bun";
+import { getRegistry } from "cdk8s-local/get-registry";
+import { checkRequirements, DEFAULT_REQUIREMENTS } from "cdk8s-local/requirements";
 import { binary, boolean, command, flag, option, optional, run } from "cmd-ts";
 import { rm } from "fs/promises";
 import isWsl from "is-wsl";
@@ -6,14 +9,11 @@ import path from "path";
 import { synth } from ".";
 import { Config, exportConfigJsonSchema, type RawConfig } from "./schema/config";
 import { ConfigArg, findFirstConfig } from "./utils/config-arg";
-import { getRegistryPort } from "./utils/get-registry-ports";
 import { joinHostname } from "./utils/hostnames";
-import { logger } from "./utils/logging";
 import { APP_ROOT, OUT_DIR } from "./utils/paths";
-import { checkRequirements, LOCAL_DEV_REQUIRED_PROGRAMS } from "./utils/requirements";
 
 const CLUSTER_NAME = "homelab-dev";
-const REGISTRY_NAME = "registry.k3d.hamishwhc.com";
+export const REGISTRY_NAME = "registry.k3d.hamishwhc.com";
 
 const cli = command({
 	name: "bun local",
@@ -40,7 +40,7 @@ const cli = command({
 			env = await findFirstConfig();
 		}
 
-		await checkRequirements(LOCAL_DEV_REQUIRED_PROGRAMS);
+		await checkRequirements(DEFAULT_REQUIREMENTS);
 
 		const clusters = await $`k3d cluster get ${CLUSTER_NAME}`.throws(false).quiet();
 		let create = true;
@@ -93,7 +93,7 @@ const cli = command({
 			}
 		}
 
-		const registryPort = await getRegistryPort(REGISTRY_NAME);
+		const registry = await getRegistry(CLUSTER_NAME);
 
 		const base = env.config;
 		const config = Config.safeParse({
@@ -108,7 +108,7 @@ const cli = command({
 			acme: { enable: false },
 			images: {
 				...base.images,
-				destination: `${REGISTRY_NAME}:${registryPort}`,
+				destination: `${REGISTRY_NAME}:${registry!.port}`,
 			},
 			features: {
 				...base.features,

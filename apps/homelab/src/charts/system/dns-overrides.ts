@@ -1,8 +1,8 @@
+import { createContext } from "cdk-typed-context";
 import { Chart, type ChartProps } from "cdk8s";
 import { ConfigMap } from "cdk8s-plus-32";
 import type { Construct } from "constructs";
 import type { HTTPGateway } from "../../constructs/http-gateway";
-import { createContext } from "../../utils/contexts";
 import { getServiceHostname } from "../../utils/service";
 
 export const DNSOverridesChartContext = createContext<{ chart: DNSOverridesChart | null }>("DNSOverrides", {

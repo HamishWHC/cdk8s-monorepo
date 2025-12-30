@@ -1,9 +1,9 @@
+import { createContext } from "cdk-typed-context";
 import { Chart, type ChartProps } from "cdk8s";
 import { KbldConfig, type KbldConfigProps } from "cdk8s-kbld";
 import type { Destination, Source } from "cdk8s-kbld/types";
 import { Construct } from "constructs";
 import { getConfig } from "../schema/config";
-import { createContext } from "../utils/contexts";
 
 export interface ImageBuildOptions {
 	name: string;

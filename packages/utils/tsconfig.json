@@ -1,7 +1,8 @@
 {
 	"extends": "@repo/typescript-config/tsconfig.base.json",
 	"compilerOptions": {
+		"outDir": "dist",
 		"noEmit": false
 	},
-	"include": ["src", "../../packages/cdk8s-local/src/requirements.ts"]
+	"include": ["src"]
 }

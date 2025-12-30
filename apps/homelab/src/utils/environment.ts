@@ -1,5 +1,5 @@
+import { createContext } from "cdk-typed-context";
 import type { Construct } from "constructs";
-import { createContext } from "./contexts";
 
 export interface Environment {
 	name: string;

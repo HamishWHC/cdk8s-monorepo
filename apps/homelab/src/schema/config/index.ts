@@ -1,9 +1,9 @@
+import { createContext } from "cdk-typed-context";
 import type { Construct } from "constructs";
 import { readFileSync } from "fs";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { z } from "zod";
-import { createContext } from "../../utils/contexts";
 import { APP_ROOT } from "../../utils/paths";
 import { ACMEConfig, DomainConfig } from "./dns";
 import { featureToggle } from "./utils";

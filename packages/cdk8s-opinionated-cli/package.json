@@ -1,5 +1,5 @@
 {
-	"name": "cdk8s-local",
+	"name": "cdk8s-opinionated-cli",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -16,12 +16,11 @@
 		"generate-config-types": "bun run ./scripts/generate-config-types.ts"
 	},
 	"dependencies": {
-		"arktype": "catalog:",
 		"cdk8s": "catalog:",
 		"cdk8s-kbld": "workspace:*",
+		"cdk8s-local": "workspace:*",
 		"cmd-ts": "catalog:",
 		"constructs": "catalog:",
-		"is-wsl": "^3.1.0",
 		"@repo/utils": "workspace:*"
 	},
 	"devDependencies": {
@@ -29,7 +28,6 @@
 		"@repo/typescript-config": "workspace:*",
 		"@types/bun": "catalog:",
 		"eslint": "catalog:",
-		"json-schema-to-typescript": "^15.0.4",
 		"typescript": "catalog:"
 	}
 }

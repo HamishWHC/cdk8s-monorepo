@@ -28,6 +28,9 @@ export const config = [
 	},
 	{
 		ignores: ["dist/**"],
+		linterOptions: {
+			reportUnusedDisableDirectives: false,
+		},
 	},
 	{
 		rules: {

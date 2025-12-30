@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { ImageBuilder, setupImageBuilderContext } from "../constructs/image-builder";
 import { setupConfigContext, type Config } from "../schema/config";
 import { commonLabels } from "../utils/common-metadata";
-import { createContext } from "../utils/contexts";
+import { createContext } from "cdk-typed-context";
 import { setupEnvironmentContext, type Environment } from "../utils/environment";
 import { AppsChartsConstruct } from "./apps";
 import { CoreChartsConstruct } from "./core";
