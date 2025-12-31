@@ -4,5 +4,17 @@
 		"outDir": "dist",
 		"noEmit": false
 	},
-	"include": ["src"]
+	"include": [
+		"src",
+		"../cdk8s-local/src/k3d-config",
+		"../cdk8s-local/src/config.ts",
+		"../cdk8s-local/src/default-args.ts",
+		"../cdk8s-local/src/get-k3d-nodes.ts",
+		"../cdk8s-local/src/get-registry.ts",
+		"../cdk8s-local/src/index.ts",
+		"../cdk8s-local/src/random-registry-name.ts",
+		"../cdk8s-local/src/requirements.ts",
+		"../cdk8s-local/scripts",
+		"scripts"
+	]
 }

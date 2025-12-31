@@ -1,10 +1,12 @@
 import { Chart, Helm, type ChartProps } from "cdk8s";
 import { Construct } from "constructs";
+import type { EnvoyGatewayClass } from "../../constructs/envoy-gateway-class";
 import { HTTPGateway } from "../../constructs/http-gateway";
 import { HttpRoute } from "../../imports/gateway.networking.k8s.io";
 import { getConfig } from "../../schema/config";
 import { makeHostname } from "../../utils/hostnames";
 import { addNamespace } from "./namespaces";
+import type { DualAccess } from "../../utils/dual-access";
 
 const VERSION = "1.18.3";
 
@@ -101,11 +103,12 @@ export class CiliumChart extends Chart {
 		});
 	}
 
-	addGatewayAndRoute() {
+	addGatewayAndRoute(gatewayClasses?: DualAccess<EnvoyGatewayClass>) {
 		const config = getConfig(this);
 		if (config.features.monitoring.enable) {
 			this.gateway = new HTTPGateway(this, "hubble-ui-gateway", {
 				hostnames: [makeHostname(this, "hubble", "main")],
+				gatewayClasses,
 			});
 			this.route = new HttpRoute(this, "hubble-ui-route", {
 				spec: {

@@ -1,14 +1,30 @@
 import type { Awaitable } from "@repo/utils/awaitable";
-import type { CommonContext } from "@repo/utils/cli-contexts";
+import type { CommonContext, CommonStartupContext } from "@repo/utils/cli-contexts";
 import type { ArgTypes, Output } from "@repo/utils/cmd-ts-types";
 import type { PickPartial } from "@repo/utils/pick-partial";
 import type { App } from "cdk8s";
-import { Config as LocalConfig, type StartupContext } from "cdk8s-local/config";
+import { Config as LocalConfig } from "cdk8s-local/config";
 import type { DefaultArgs } from "cdk8s-local/default-args";
 
 type FeatureToggle<T extends object> = { enabled: false } | ({ enabled: true } & T);
 
-interface _Config<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes> {
+export interface SynthConfig {
+	/**
+	 * Optional configuration for the generated `cmd-ts` subcommand.
+	 */
+	command?: {
+		/**
+		 * @default "synth"
+		 */
+		name?: string;
+		/**
+		 * @default "Synthesize the CDK8s app into K8s manifests."
+		 */
+		description?: string;
+	};
+}
+
+export interface Config<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes> {
 	/**
 	 * `cmd-ts` argument definitions for the CLI. This will be merged with the default arguments provided by `cdk8s-opinionated-cli`,
 	 * and passed to your hooks and synth function.
@@ -17,7 +33,7 @@ interface _Config<Arguments extends ArgTypes, Data, LocalArguments extends ArgTy
 	 *
 	 * This can be overridden for local development (in case you need to pass custom configuration for running locally).
 	 */
-	args: Arguments;
+	args?: Arguments;
 	/**
 	 * A function which synthesizes your CDK8s app. Is expected to return an `App` instance.
 	 */
@@ -38,20 +54,29 @@ interface _Config<Arguments extends ArgTypes, Data, LocalArguments extends ArgTy
 	};
 
 	/**
-	 * Optional configuration for the local development command. `args` and `synth` are inherited from the main config,
-	 * but can be extended here.
+	 * Configuration for the various subcommands of the CLI. All commands are enabled by default.
 	 */
-	local?: FeatureToggle<PickPartial<LocalConfig<LocalArguments, Data, Arguments>, "synth">>;
+	subcommands: {
+		/**
+		 * Optional configuration for the `synth` subcommand.
+		 */
+		synth?: FeatureToggle<SynthConfig>;
+		/**
+		 * Optional configuration for the `local` command. `args` and `synth` are inherited from the main config,
+		 * but can be extended here.
+		 */
+		local?: FeatureToggle<PickPartial<LocalConfig<LocalArguments, Data, Arguments>, "synth">>;
+	};
 
 	/**
-	 * A function that will run immediately on startup, but with access to the parsed CLI arguments.
-	 *
-	 * You can return an updated context if you want to modify the arguments or add custom data.
+	 * These hooks run at various points and allow you to customize the CLI's behavior.
 	 */
-	startup?: (ctx: StartupContext<Output<Arguments & DefaultArgs>>) => Awaitable<Data | void>;
+	hooks?: {
+		/**
+		 * A function that will run immediately on startup, but with access to the parsed CLI arguments.
+		 *
+		 * You can return an updated context if you want to modify the arguments or add custom data.
+		 */
+		startup?: (ctx: CommonStartupContext<Output<Arguments & DefaultArgs>>) => Awaitable<Data | void>;
+	};
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type Config<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes = {}> = "" extends keyof Arguments
-	? PickPartial<_Config<Arguments, Data, LocalArguments>, "args">
-	: _Config<Arguments, Data, LocalArguments>;

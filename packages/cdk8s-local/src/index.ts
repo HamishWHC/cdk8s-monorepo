@@ -23,8 +23,9 @@ type ManifestSource = { type: "directory"; path: string } | { type: "buffer"; bu
  */
 export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Config<Arguments, Data>) {
 	return command({
-		name: config.command?.name ?? "cdk8s-local",
-		description: config.command?.description ?? "CLI for locally running infrastructure built with CDK8s.",
+		name: config.command?.name ?? "local",
+		description:
+			config.command?.description ?? "Synthesises, builds and deploys your CDK8s app to a local k3d cluster.",
 		args: {
 			...config.args!,
 			...defaultArgs,
@@ -36,7 +37,7 @@ export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Conf
 
 			const ctx = {
 				...startupCtx,
-				data: (await config.startup?.(startupCtx)) ?? ({} as Data),
+				data: (await config.hooks?.startup?.(startupCtx)) ?? ({} as Data),
 			};
 
 			const clusterName = (await resolveThunk(config.clusterName, ctx)) ?? "cdk8s-local";
@@ -101,6 +102,8 @@ export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Conf
 				create,
 				registry: await getRegistry(clusterName),
 			});
+			await rm(app.outdir, { recursive: true, force: true });
+			app.synth();
 
 			let manifestSource: ManifestSource = { type: "directory" as const, path: app.outdir };
 			if (app.node.findAll(ConstructOrder.POSTORDER).find((c) => c instanceof KbldConfig)) {

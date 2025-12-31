@@ -48,6 +48,7 @@ export class SystemChartsConstruct extends Construct {
 		this.certificateStore = new CertificateStoreChart(this, "certificate-store", {
 			...props.defaultChartProps,
 			namespace: "cert-manager",
+			acme: this.acme,
 		});
 
 		this.envoyGateway = new EnvoyGatewayChart(this, "envoy-gateway", {
@@ -55,7 +56,7 @@ export class SystemChartsConstruct extends Construct {
 			namespace: "envoy-gateway-system",
 		});
 
-		this.cilium.addGatewayAndRoute();
+		this.cilium.addGatewayAndRoute(this.envoyGateway.classes);
 
 		this.cnpg = new CNPGChart(this, "cnpg", {
 			...props.defaultChartProps,

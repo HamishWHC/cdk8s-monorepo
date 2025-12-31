@@ -1,6 +1,7 @@
 import { Chart, Helm } from "cdk8s";
 import type { Construct } from "constructs";
 import { EnvoyGatewayClass } from "../../constructs/envoy-gateway-class";
+import type { DualAccess } from "../../utils/dual-access";
 import type { NamespacedChartProps } from "../../utils/types";
 import { addNamespace } from "./namespaces";
 
@@ -9,11 +10,10 @@ const CRDS_URL = "oci://docker.io/envoyproxy/gateway-crds-helm";
 const VERSION = "v1.6.0";
 
 export class EnvoyGatewayChart extends Chart {
+	crds: Helm;
 	release: Helm;
-	crds?: Helm;
 
-	externalGatewayClass: EnvoyGatewayClass;
-	internalGatewayClass: EnvoyGatewayClass;
+	classes: DualAccess<EnvoyGatewayClass>;
 
 	constructor(scope: Construct, id: string, props: NamespacedChartProps) {
 		super(scope, id, props);
@@ -37,7 +37,9 @@ export class EnvoyGatewayChart extends Chart {
 			values: {},
 		});
 
-		this.externalGatewayClass = new EnvoyGatewayClass(this, "external-gateway-class", { mode: "external" });
-		this.internalGatewayClass = new EnvoyGatewayClass(this, "internal-gateway-class", { mode: "internal" });
+		this.classes = {
+			internal: new EnvoyGatewayClass(this, "internal-gateway-class", { mode: "internal" }),
+			external: new EnvoyGatewayClass(this, "external-gateway-class", { mode: "external" }),
+		};
 	}
 }

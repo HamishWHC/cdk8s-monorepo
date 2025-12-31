@@ -1,7 +1,4 @@
-import { logger } from "@repo/utils/logger";
-import { stopwatch } from "@repo/utils/stopwatch";
 import { App, YamlOutputType } from "cdk8s";
-import { rm } from "node:fs/promises";
 import { RootConstruct } from "./charts";
 import type { Config } from "./schema/config";
 import type { Environment } from "./utils/environment";
@@ -14,10 +11,7 @@ export interface SynthOptions {
 }
 
 export const synth = async (options: SynthOptions) => {
-	logger.info("start helm add");
-	const sw = stopwatch();
 	await addHelmRepos();
-	logger.info(`finished helm add in ${sw()}ms`);
 
 	const app = new App({
 		outdir: OUT_DIR,
@@ -33,9 +27,6 @@ export const synth = async (options: SynthOptions) => {
 			disableResourceNameHashes: true,
 		},
 	});
-
-	await rm(OUT_DIR, { recursive: true, force: true });
-	app.synth();
 
 	return app;
 };

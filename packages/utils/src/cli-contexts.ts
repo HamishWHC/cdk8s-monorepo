@@ -1,6 +1,6 @@
 export type CommandKey = "local" | "synth";
 
-export interface CommonStartupContext<Args> {
+export interface CommonStartupContext<Args, Key extends CommandKey = CommandKey> {
 	/**
 	 * Your parsed CLI arguments.
 	 */
@@ -12,7 +12,8 @@ export interface CommonStartupContext<Args> {
 	command: CommandKey;
 }
 
-export interface CommonContext<Args, Data> extends CommonStartupContext<Args> {
+export interface CommonContext<Args, Data, Key extends CommandKey = CommandKey>
+	extends CommonStartupContext<Args, Key> {
 	/**
 	 * Your custom context data.
 	 */

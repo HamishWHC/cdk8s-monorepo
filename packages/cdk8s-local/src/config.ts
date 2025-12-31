@@ -1,7 +1,6 @@
 import type { Awaitable } from "@repo/utils/awaitable";
 import type { CommonContext, CommonStartupContext } from "@repo/utils/cli-contexts";
 import type { ArgTypes, Output } from "@repo/utils/cmd-ts-types";
-import type { PickPartial } from "@repo/utils/pick-partial";
 import type { App } from "cdk8s";
 import type { DefaultArgs } from "./default-args";
 import type { K3dConfig } from "./k3d-config";
@@ -29,14 +28,15 @@ export interface SynthContext<Args, Data> extends Context<Args, Data> {
 	} | null;
 }
 
-export interface _Config<Arguments extends ArgTypes, Data, ParentArguments extends ArgTypes> {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Config<Arguments extends ArgTypes, Data, ParentArguments extends ArgTypes = {}> {
 	/**
 	 * `cmd-ts` argument definitions for the CLI. This will be merged with the default arguments provided by `cdk8s-local`,
 	 * and passed to your hooks and synth function.
 	 *
 	 * You can use this to add your own CLI arguments to allow users to configure your CDK8s app generation.
 	 */
-	args: Arguments;
+	args?: Arguments;
 	/**
 	 * A function which synthesizes your CDK8s app. Is expected to return an `App` instance.
 	 */
@@ -47,11 +47,11 @@ export interface _Config<Arguments extends ArgTypes, Data, ParentArguments exten
 	 */
 	command?: {
 		/**
-		 * @default "cdk8s-local"
+		 * @default "local"
 		 */
 		name?: string;
 		/**
-		 * @default "CLI for locally running infrastructure built with CDK8s."
+		 * @default "Synthesises, builds and deploys your CDK8s app to a local k3d cluster."
 		 */
 		description?: string;
 	};
@@ -82,15 +82,15 @@ export interface _Config<Arguments extends ArgTypes, Data, ParentArguments exten
 		| ((ctx: StartupContext<Output<Arguments & ParentArguments & DefaultArgs>>) => Awaitable<RequiredProgram[]>);
 
 	/**
-	 * A function that will run immediately on startup, but with access to the parsed CLI arguments.
-	 *
-	 * You can return an updated context if you want to modify the arguments or add custom data.
-	 */
-	startup?: (ctx: StartupContext<Output<Arguments & ParentArguments & DefaultArgs>>) => Awaitable<Data | void>;
-	/**
-	 * These hooks run at various points during the cluster lifecycle, and allow you to customize the CLI's behavior.
+	 * These hooks run at various points and allow you to customize the CLI's behavior.
 	 */
 	hooks?: {
+		/**
+		 * A function that will run immediately on startup, but with access to the parsed CLI arguments.
+		 *
+		 * You can return an updated context if you want to modify the arguments or add custom data.
+		 */
+		startup?: (ctx: StartupContext<Output<Arguments & ParentArguments & DefaultArgs>>) => Awaitable<Data | void>;
 		/**
 		 * A function that will run just before synthesis. If you are using `cdk8s-local`, you probably don't need this,
 		 * but you may want to use it with `cdk8s-opinionated-cli`, so you can use a common synth function.
@@ -100,8 +100,3 @@ export interface _Config<Arguments extends ArgTypes, Data, ParentArguments exten
 		preSynth?: (ctx: SynthContext<Output<Arguments & ParentArguments & DefaultArgs>, Data>) => Awaitable<Data | void>;
 	};
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type Config<Arguments extends ArgTypes, Data, ParentArguments extends ArgTypes = {}> = "" extends keyof Arguments
-	? PickPartial<_Config<Arguments, Data, ParentArguments>, "args">
-	: _Config<Arguments, Data, ParentArguments>;

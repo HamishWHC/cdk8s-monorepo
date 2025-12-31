@@ -3,8 +3,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"synth": "bun src/synth.ts",
-		"local": "bun src/local2.ts",
+		"cli": "bun run src/cli.ts",
 		"typecheck": "tsc --noEmit",
 		"lint": "eslint . --max-warnings 0",
 		"import": "cdk8s import",

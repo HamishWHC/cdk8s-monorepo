@@ -2,12 +2,12 @@ import { createContext } from "cdk-typed-context";
 import { Chart } from "cdk8s";
 import { Secret, type ISecret } from "cdk8s-plus-32";
 import type { Construct } from "constructs";
-import { getRootConstruct } from "..";
 import { Certificate } from "../../imports/cert-manager.io";
 import { ReferenceGrant, type GatewaySpecListenersTlsCertificateRefs } from "../../imports/gateway.networking.k8s.io";
 import { generateName } from "../../utils/generate-name";
 import { canoniseHostname, hostnameToLabelPart } from "../../utils/hostnames";
 import type { NamespacedChartProps } from "../../utils/types";
+import type { ACMEChart } from "./acme";
 
 export const CertificateStoreChartContext = createContext<{ chart: CertificateStoreChart | null }>(
 	"CertificateStoreChart",
@@ -37,11 +37,17 @@ interface CertificateStoreEntry {
 	referenceGrants: ReferenceGrant[];
 }
 
+export interface CertificateStoreChartProps extends NamespacedChartProps {
+	acme: ACMEChart;
+}
+
 export class CertificateStoreChart extends Chart {
 	certificates: Map<string, CertificateStoreEntry> = new Map();
+	private acme: ACMEChart;
 
-	constructor(scope: Construct, id: string, props: NamespacedChartProps) {
+	constructor(scope: Construct, id: string, props: CertificateStoreChartProps) {
 		super(scope, id, props);
+		this.acme = props.acme;
 
 		const ctx = CertificateStoreChartContext.get(scope);
 		if (ctx.chart) {
@@ -64,7 +70,6 @@ export class CertificateStoreChart extends Chart {
 
 	public getOrCreateCertificate(scope: Construct, hostname: string) {
 		const namespace = Chart.of(scope).namespace ?? "default";
-		const root = getRootConstruct(this);
 		const names = canoniseHostname(this, hostname);
 		let entry = this.certificates.get(names.canonical);
 		if (entry) {
@@ -81,8 +86,8 @@ export class CertificateStoreChart extends Chart {
 		const certificate = new Certificate(this, `${label}-certificate`, {
 			spec: {
 				issuerRef: {
-					name: root.system.acme.issuer.name,
-					kind: root.system.acme.issuer.kind,
+					name: this.acme.issuer.name,
+					kind: this.acme.issuer.kind,
 				},
 				secretName,
 				commonName: names.parent ?? names.canonical,

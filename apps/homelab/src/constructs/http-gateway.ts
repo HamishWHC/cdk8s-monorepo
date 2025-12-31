@@ -12,6 +12,7 @@ import {
 	type GatewaySpecListeners,
 	type HttpRouteSpecParentRefs,
 } from "../imports/gateway.networking.k8s.io";
+import type { DualAccess } from "../utils/dual-access";
 import type { EnvoyGatewayClass } from "./envoy-gateway-class";
 
 export interface HTTPGatewayProps {
@@ -25,11 +26,6 @@ export interface HTTPGatewayProps {
 		http?: number;
 		https?: number;
 	};
-}
-
-export interface DualAccess<T> {
-	external: T;
-	internal: T;
 }
 
 export class HTTPGateway extends Construct {
@@ -63,10 +59,7 @@ export class HTTPGateway extends Construct {
 		});
 
 		const root = getRootConstruct(this);
-		this.classes = props.gatewayClasses ?? {
-			external: root.system.envoyGateway.externalGatewayClass,
-			internal: root.system.envoyGateway.internalGatewayClass,
-		};
+		this.classes = props.gatewayClasses ?? root.system.envoyGateway.classes;
 
 		this.gateways = {
 			external: new Gateway(this, "external", {
