@@ -221,7 +221,7 @@ export async function resolveK3dConfig(name: string, config: K3dConfig | undefin
 					create: {
 						name: registry.name,
 						hostPort: `${registry.port}`,
-						enforcePortMatch: true,
+						// enforcePortMatch: true,
 					},
 				}
 			: undefined,

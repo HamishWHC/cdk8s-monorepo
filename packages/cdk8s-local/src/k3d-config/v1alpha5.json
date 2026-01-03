@@ -325,10 +325,6 @@
 								"type": "string"
 							},
 							"examples": ["/tmp/registry:/var/lib/registry"]
-						},
-						"enforcePortMatch": {
-							"type": "boolean",
-							"default": false
 						}
 					},
 					"additionalProperties": false

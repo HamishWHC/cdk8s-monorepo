@@ -104,7 +104,6 @@ export interface K3DSimpleConfigV1Alpha5 {
 				password?: string;
 			};
 			volumes?: string[];
-			enforcePortMatch?: boolean;
 		};
 		/**
 		 * Connect another container image registry to the cluster.
