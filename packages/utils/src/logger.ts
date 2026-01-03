@@ -28,5 +28,9 @@ export const logger = new Logger({
 					FATAL: "FATL",
 				}[logObjMeta.logLevelName] ?? logObjMeta.logLevelName.slice(0, 4);
 		},
+		transportFormatted: (logMetaMarkup, logArgs, logErrors, logMeta) => {
+			const logLevel = logMetaMarkup.trim();
+			process.stderr.write(`${logLevel} ${logArgs.join(" ")}\n`);
+		},
 	},
 });

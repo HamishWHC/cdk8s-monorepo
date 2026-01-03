@@ -7,11 +7,12 @@ import { binary, command, run } from "cmd-ts";
 import { ConstructOrder } from "constructs";
 import { rm } from "fs/promises";
 import isWsl from "is-wsl";
+import path from "path";
 import type { Config } from "./config";
 import { defaultArgs } from "./default-args";
 import { getK3dNodes } from "./get-k3d-nodes";
 import { getRegistry } from "./get-registry";
-import { resolveK3dConfig } from "./k3d-config";
+import { resolveK3dConfig, type K3dConfigResolution } from "./k3d-config";
 import { checkRequirements, DEFAULT_REQUIREMENTS } from "./requirements";
 
 type ManifestSource = { type: "directory"; path: string } | { type: "buffer"; buffer: ArrayBuffer };
@@ -53,27 +54,75 @@ export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Conf
 				}
 			}
 
+			let registry = create ? null : await getRegistry(clusterName);
+			let k3dConfigResolution: K3dConfigResolution | null = null;
+
 			if (create) {
 				const k3dConfig = await resolveThunk(config.k3d, ctx);
+				k3dConfigResolution = await resolveK3dConfig(clusterName, k3dConfig);
+				registry = k3dConfigResolution.registry;
+			}
 
+			logger.info("Running synth (generating manifests)...");
+			const app = await config.synth({
+				...ctx,
+				create,
+				registry,
+			});
+			await rm(app.outdir, { recursive: true, force: true });
+			app.synth();
+
+			if (args.synth) {
+				logger.info(
+					"Synth complete, skipping build and deploy, find manifests in " + path.relative(process.cwd(), app.outdir),
+				);
+				return;
+			}
+
+			let manifestSource: ManifestSource = { type: "directory" as const, path: app.outdir };
+			if (app.node.findAll(ConstructOrder.POSTORDER).find((c) => c instanceof KbldConfig)) {
+				logger.info("Detected kbld config construct, running kbld...");
+				try {
+					manifestSource = { type: "buffer" as const, buffer: await $`kbld -f ${app.outdir}`.arrayBuffer() };
+				} catch (e) {
+					if (e instanceof $.ShellError) {
+						logger.error(e.stderr.toString("utf-8"));
+						logger.fatal("Failed to build images from manifests.");
+						return 1;
+					}
+					throw e;
+				}
+			} else if (args.build) {
+				logger.warn(
+					"The --build flag was set but no kbld config was found in the app. Skipping build step - no manifests will be emitted on stdout.",
+				);
+			}
+
+			if (args.build) {
+				if (manifestSource.type === "buffer") {
+					process.stdout.write(Buffer.from(manifestSource.buffer));
+				}
+				return;
+			}
+
+			if (k3dConfigResolution) {
 				logger.info(`Creating k3d cluster (${clusterName})...`);
-				if (k3dConfig?.configureCilium && isWsl) {
+				if (k3dConfigResolution.originalConfig?.configureCilium && isWsl) {
 					logger.warn("Cilium configuration is not supported on WSL, skipping Cilium setup for k3d.");
-					k3dConfig.configureCilium = false;
+					k3dConfigResolution.originalConfig.configureCilium = false;
 				}
 
-				for (const volume of k3dConfig?.volumes ?? []) {
+				for (const volume of k3dConfigResolution.originalConfig?.volumes ?? []) {
 					if (volume.deleteOnClusterCreate) {
 						await rm(volume.hostPath, { recursive: true, force: true });
 					}
 					await $`mkdir -p ${volume.hostPath}`;
 				}
 
-				const resolvedConfig = await resolveK3dConfig(clusterName, k3dConfig);
-				const configBuffer = Buffer.from(resolvedConfig, "utf-8");
+				const configBuffer = Buffer.from(k3dConfigResolution.resolvedConfig, "utf-8");
 				await $`k3d cluster create -c - < ${configBuffer}`;
 
-				if (k3dConfig?.configureCilium) {
+				if (k3dConfigResolution.originalConfig?.configureCilium) {
 					const nodes = await getK3dNodes(clusterName);
 					for (const { name, role } of nodes) {
 						if (role !== "server" && role !== "agent") {
@@ -96,36 +145,13 @@ export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Conf
 				}
 			}
 
-			logger.info("Running synth (generating manifests)...");
-			const app = await config.synth({
-				...ctx,
-				create,
-				registry: await getRegistry(clusterName),
-			});
-			await rm(app.outdir, { recursive: true, force: true });
-			app.synth();
-
-			let manifestSource: ManifestSource = { type: "directory" as const, path: app.outdir };
-			if (app.node.findAll(ConstructOrder.POSTORDER).find((c) => c instanceof KbldConfig)) {
-				logger.info("Detected kbld config construct, running kbld...");
-				try {
-					manifestSource = { type: "buffer" as const, buffer: await $`kbld -f ${app.outdir}`.arrayBuffer() };
-				} catch (e) {
-					if (e instanceof $.ShellError) {
-						logger.error(e.stderr.toString("utf-8"));
-						logger.fatal("Failed to build images from manifests.");
-						return 1;
-					}
-					throw e;
-				}
-			}
-
 			logger.info("Applying manifests to local cluster...");
 
 			// TODO: Set KUBECONFIG for kapp to use the k3d cluster config directly, rather than relying on k3d setting current-context.
 			const context = (await $`kubectl config current-context`.text()).trim();
 			if (context !== `k3d-${clusterName}`) {
 				logger.fatal(`Will not deploy local environment to context: ${context}`);
+				// throw new CliError("Current kubectl context does not match k3d cluster context.");
 				return 1;
 			}
 

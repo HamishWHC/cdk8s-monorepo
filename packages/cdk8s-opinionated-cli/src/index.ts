@@ -1,8 +1,12 @@
 import type { ArgTypes } from "@repo/utils/cmd-ts-types";
-import { binary, command, run, type Runner, subcommands } from "cmd-ts";
+import { logger } from "@repo/utils/logger";
+import { $ } from "bun";
+import { binary, boolean, command, flag, run, type Runner, subcommands } from "cmd-ts";
 import type { ArgParser } from "cmd-ts/dist/cjs/argparser";
 import type { Aliased, Descriptive } from "cmd-ts/dist/cjs/helpdoc";
+import { ConstructOrder } from "constructs";
 import { rm } from "fs/promises";
+import path from "path";
 import type { Config } from "./config";
 
 export async function cdk8sOpinionatedCliCommand<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes>(
@@ -34,7 +38,14 @@ export async function cdk8sOpinionatedCliCommand<Arguments extends ArgTypes, Dat
 		cmds["synth"] = command({
 			name: config.subcommands.synth?.command?.name ?? "synth",
 			description: config.subcommands.synth?.command?.description ?? "Synthesize the CDK8s app into K8s manifests.",
-			args: config.args!,
+			args: {
+				noBuild: flag({
+					type: boolean,
+					long: "no-build",
+					description: "only synthesise the manifests, do not build resulting manifests with kbld",
+				}),
+				...config.args!,
+			},
 			async handler(args) {
 				const startupCtx = { args, command: "synth" as const };
 				const ctx = {
@@ -42,9 +53,32 @@ export async function cdk8sOpinionatedCliCommand<Arguments extends ArgTypes, Dat
 					data: (await config.hooks?.startup?.(startupCtx)) ?? ({} as Data),
 				};
 
+				logger.info("Running synth (generating manifests)...");
+
 				const app = await config.synth(ctx);
 				await rm(app.outdir, { recursive: true, force: true });
 				app.synth();
+
+				if (args.noBuild) {
+					logger.info("Synth complete, skipping build, find manifests in " + path.relative(process.cwd(), app.outdir));
+					return;
+				}
+
+				const { KbldConfig } = await import("cdk8s-kbld");
+				if (app.node.findAll(ConstructOrder.POSTORDER) instanceof KbldConfig) {
+					logger.info("Detected kbld config construct, running kbld...");
+					try {
+						const buffer = await $`kbld -f ${app.outdir}`.arrayBuffer();
+						process.stdout.write(Buffer.from(buffer));
+					} catch (e) {
+						if (e instanceof $.ShellError) {
+							logger.error(e.stderr.toString("utf-8"));
+							logger.fatal("Failed to build images from manifests.");
+							return 1;
+						}
+						throw e;
+					}
+				}
 			},
 		});
 	}

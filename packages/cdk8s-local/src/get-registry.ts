@@ -1,6 +1,11 @@
 import { getK3dNodes } from "./get-k3d-nodes";
 
-export async function getRegistry(clusterName: string) {
+export interface RegistryInfo {
+	name: string;
+	port: number;
+}
+
+export async function getRegistry(clusterName: string): Promise<RegistryInfo | null> {
 	const nodes = await getK3dNodes(clusterName);
 	const registryNode = nodes.find((node) => node.role === "registry");
 	if (!registryNode) {

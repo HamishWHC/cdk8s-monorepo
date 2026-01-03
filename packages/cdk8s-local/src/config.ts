@@ -6,13 +6,8 @@ import type { DefaultArgs } from "./default-args";
 import type { K3dConfig } from "./k3d-config";
 import type { RequiredProgram } from "./requirements";
 
-export interface StartupContext<Args> extends CommonStartupContext<Args> {
-	command: "local";
-}
-
-export interface Context<Args, Data> extends CommonContext<Args, Data> {
-	command: "local";
-}
+export interface StartupContext<Args> extends CommonStartupContext<Args, "local"> {}
+export interface Context<Args, Data> extends CommonContext<Args, Data, "local"> {}
 
 export interface SynthContext<Args, Data> extends Context<Args, Data> {
 	/**
@@ -28,7 +23,6 @@ export interface SynthContext<Args, Data> extends Context<Args, Data> {
 	} | null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Config<Arguments extends ArgTypes, Data, ParentArguments extends ArgTypes = {}> {
 	/**
 	 * `cmd-ts` argument definitions for the CLI. This will be merged with the default arguments provided by `cdk8s-local`,

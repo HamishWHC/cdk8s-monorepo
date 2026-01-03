@@ -1,7 +1,18 @@
 import type { Awaitable } from "@repo/utils/awaitable";
 import { YAML } from "bun";
-import { randomRegistryName } from "../random-registry-name";
+import type { RegistryInfo } from "../get-registry";
 import type { K3DSimpleConfigV1Alpha5, NodeFilters } from "./v1alpha5";
+
+function randomRegistryName() {
+	const randomHex = crypto
+		.getRandomValues(new Uint8Array(2))
+		.reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
+	return `registry-${randomHex}.k3d.hamishwhc.com`;
+}
+
+function randomRegistryPort() {
+	return 10000 + Math.floor(Math.random() * 50000);
+}
 
 export type K3dSimpleConfig = K3DSimpleConfigV1Alpha5;
 
@@ -57,6 +68,13 @@ export interface K3sArg {
 }
 
 export interface K3dConfig {
+	/**
+	 * The K3s image to use for the cluster nodes. k3d will automatically pick the latest version for your host architecture if not specified.
+	 *
+	 * You can specify a platform-specific image from the K3s image tags, such as `rancher/k3s:v1.34.1-k3s1-amd64`, to force the k3d nodes to be created as a specific platform.
+	 */
+	image?: string;
+
 	/**
 	 * Number of server nodes in the k3d cluster.
 	 * Note that the default of 1 disables etcd and the ability to add additional servers later.
@@ -162,14 +180,30 @@ export interface K3dConfig {
 	 *
 	 * Generally, would recommend using only for adding k3d/K3s options not covered by the convenience options available in this package.
 	 */
-	config?: (c: K3DSimpleConfigV1Alpha5) => Awaitable<string | K3dSimpleConfig>;
+	config?: (c: K3DSimpleConfigV1Alpha5, r: RegistryInfo | null) => Awaitable<string | K3dSimpleConfig>;
 }
 
-export async function resolveK3dConfig(name: string, config: K3dConfig | undefined): Promise<string> {
-	const configFile: K3DSimpleConfigV1Alpha5 = {
+export interface K3dConfigResolution {
+	originalConfig?: K3dConfig;
+	autoConfig: K3DSimpleConfigV1Alpha5;
+	resolvedConfig: string;
+	registry: RegistryInfo | null;
+}
+
+export async function resolveK3dConfig(name: string, config: K3dConfig | undefined): Promise<K3dConfigResolution> {
+	const registry =
+		config?.registryName !== null
+			? {
+					name: config?.registryName || randomRegistryName(),
+					port: randomRegistryPort(),
+				}
+			: null;
+
+	const autoConfig: K3DSimpleConfigV1Alpha5 = {
 		apiVersion: "k3d.io/v1alpha5",
 		kind: "Simple",
 		metadata: { name },
+		image: config?.image,
 		servers: config?.servers ?? 1,
 		agents: config?.agents ?? undefined,
 		volumes:
@@ -182,14 +216,15 @@ export async function resolveK3dConfig(name: string, config: K3dConfig | undefin
 				port: `${hostPort}:${containerPort}`,
 				nodeFilters: nodeFilters ?? ["loadbalancer"],
 			})) ?? [],
-		registries:
-			config?.registryName !== null
-				? {
-						create: {
-							name: config?.registryName || randomRegistryName(),
-						},
-					}
-				: undefined,
+		registries: registry
+			? {
+					create: {
+						name: registry.name,
+						hostPort: `${registry.port}`,
+						enforcePortMatch: true,
+					},
+				}
+			: undefined,
 		env: config?.env?.map(({ name, value, nodeFilters }) => ({ envVar: `${name}=${value}`, nodeFilters })) ?? [],
 		options: {
 			k3s: {
@@ -205,10 +240,10 @@ export async function resolveK3dConfig(name: string, config: K3dConfig | undefin
 		},
 	};
 
-	let resolvedConfig = config?.config ? await config?.config(configFile) : configFile;
+	let resolvedConfig = config?.config ? await config?.config(autoConfig, registry) : autoConfig;
 	if (typeof resolvedConfig !== "string") {
 		resolvedConfig = YAML.stringify(resolvedConfig, null, 2);
 	}
 
-	return resolvedConfig;
+	return { originalConfig: config, autoConfig, resolvedConfig, registry };
 }

@@ -28,13 +28,11 @@ export const config = [
 	},
 	{
 		ignores: ["dist/**"],
-		linterOptions: {
-			reportUnusedDisableDirectives: false,
-		},
 	},
 	{
 		rules: {
 			"@typescript-eslint/no-unused-vars": "off",
+			"@typescript-eslint/no-empty-object-type": "off",
 		},
 	},
 ];

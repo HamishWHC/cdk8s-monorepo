@@ -4,7 +4,6 @@ import type { ArgTypes, Output } from "@repo/utils/cmd-ts-types";
 import type { PickPartial } from "@repo/utils/pick-partial";
 import type { App } from "cdk8s";
 import { Config as LocalConfig } from "cdk8s-local/config";
-import type { DefaultArgs } from "cdk8s-local/default-args";
 
 type FeatureToggle<T extends object> = { enabled: false } | ({ enabled: true } & T);
 
@@ -77,6 +76,6 @@ export interface Config<Arguments extends ArgTypes, Data, LocalArguments extends
 		 *
 		 * You can return an updated context if you want to modify the arguments or add custom data.
 		 */
-		startup?: (ctx: CommonStartupContext<Output<Arguments & DefaultArgs>>) => Awaitable<Data | void>;
+		startup?: (ctx: CommonStartupContext<Output<Arguments>>) => Awaitable<Data | void>;
 	};
 }

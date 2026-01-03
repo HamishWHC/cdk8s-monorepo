@@ -1,5 +1,6 @@
 import type { ChartProps } from "cdk8s";
 import { Construct } from "constructs";
+import { getEnvironment } from "../../utils/environment";
 import { ACMEChart } from "./acme";
 import { CertManagerChart } from "./cert-manager";
 import { CertificateStoreChart } from "./certificate-store";
@@ -19,7 +20,7 @@ export class SystemChartsConstruct extends Construct {
 	namespaces: NamespacesChart;
 	dnsOverrides: DNSOverridesChart;
 	cilium: CiliumChart;
-	openebs: OpenEBSChart;
+	openebs?: OpenEBSChart;
 
 	certManager: CertManagerChart;
 	pki: PKIChart;
@@ -29,15 +30,19 @@ export class SystemChartsConstruct extends Construct {
 	envoyGateway: EnvoyGatewayChart;
 
 	cnpg: CNPGChart;
-	// tfOperator: TFOperatorChart;
 
 	constructor(scope: Construct, id: string, props: SystemChartsConstructProps) {
 		super(scope, id);
 
+		const environment = getEnvironment(this);
+
 		this.namespaces = new NamespacesChart(this, "namespaces", props.defaultChartProps ?? {});
 		this.dnsOverrides = new DNSOverridesChart(this, "dns-overrides", { ...props.defaultChartProps });
 		this.cilium = new CiliumChart(this, "cilium", { ...props.defaultChartProps });
-		this.openebs = new OpenEBSChart(this, "openebs", { ...props.defaultChartProps });
+		if (!environment.isK3d) {
+			console.log("Adding OpenEBS chart as environment is not k3d");
+			this.openebs = new OpenEBSChart(this, "openebs", { ...props.defaultChartProps });
+		}
 
 		this.certManager = new CertManagerChart(this, "cert-manager", {
 			...props.defaultChartProps,
