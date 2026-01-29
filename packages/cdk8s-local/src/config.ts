@@ -82,14 +82,14 @@ export interface Config<Arguments extends ArgTypes, Data, ParentArguments extend
 		/**
 		 * A function that will run immediately on startup, but with access to the parsed CLI arguments.
 		 *
-		 * You can return an updated context if you want to modify the arguments or add custom data.
+		 * You can return custom data that will be passed to subsequent hooks and the synth function.
 		 */
 		startup?: (ctx: StartupContext<Output<Arguments & ParentArguments & DefaultArgs>>) => Awaitable<Data | void>;
 		/**
 		 * A function that will run just before synthesis. If you are using `cdk8s-local`, you probably don't need this,
 		 * but you may want to use it with `cdk8s-opinionated-cli`, so you can use a common synth function.
 		 *
-		 * You can return an updated context if you want to modify the arguments or add custom data.
+		 * You can return custom data that will be passed to subsequent hooks and the synth function.
 		 */
 		preSynth?: (ctx: SynthContext<Output<Arguments & ParentArguments & DefaultArgs>, Data>) => Awaitable<Data | void>;
 	};

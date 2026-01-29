@@ -69,12 +69,14 @@ export interface Config<Arguments extends ArgTypes, Data, LocalArguments extends
 
 	/**
 	 * These hooks run at various points and allow you to customize the CLI's behavior.
+	 *
+	 * These will be _replaced_ by any hooks provided for individual subcommands.
 	 */
 	hooks?: {
 		/**
 		 * A function that will run immediately on startup, but with access to the parsed CLI arguments.
 		 *
-		 * You can return an updated context if you want to modify the arguments or add custom data.
+		 * You can return custom data that will be passed to subsequent hooks and the synth function.
 		 */
 		startup?: (ctx: CommonStartupContext<Output<Arguments>>) => Awaitable<Data | void>;
 	};

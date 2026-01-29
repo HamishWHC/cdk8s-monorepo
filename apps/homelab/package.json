@@ -13,7 +13,7 @@
 		"arktype": "^2.1.26",
 		"cdk8s": "catalog:",
 		"cdk8s-cli": "catalog:",
-		"cdk8s-kbld": "*",
+		"cdk8s-kbld2": "*",
 		"cdk8s-plus-32": "catalog:",
 		"cdk8s-local": "workspace:*",
 		"cdk8s-opinionated-cli": "workspace:*",

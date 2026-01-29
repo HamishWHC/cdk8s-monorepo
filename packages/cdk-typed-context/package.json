@@ -1,7 +1,7 @@
 {
 	"name": "cdk-typed-context",
-	"version": "0.0.0",
-	"private": true,
+	"version": "0.1.0",
+	"private": false,
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",

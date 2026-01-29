@@ -9,7 +9,7 @@ I'm using this to develop a series of opinionated tools and libraries around CDK
 
 ## Public Packages
 - [cdk-typed-context](./packages/cdk-typed-context) - A library for any `constructs` based project for strongly typed contexts. I use this in all my CDK8s/AWS CDK projects to provide type-safe context values, like global configuration, environment context, parent constructs, etc.
-- [cdk8s-kbld](./packages/cdk8s-kbld) - A CDK8s construct for [kbld](https://carvel.dev/kbld/) to enable emitting a `kbld` configuration alongside your CDK8s manifests, so you can pipe your output directly into `kbld` for image locking and building. This avoids the need for building images _during_ the CDK8s synthesis step, like in `cdk8s-image`.
+- [cdk8s-kbld2](./packages/cdk8s-kbld2) - A CDK8s construct for [kbld](https://carvel.dev/kbld/) to enable emitting a `kbld` configuration alongside your CDK8s manifests, so you can pipe your output directly into `kbld` for image locking and building. This avoids the need for building images _during_ the CDK8s synthesis step, like in `cdk8s-image`.
 - [cdk8s-local](./packages/cdk8s-local) - A library for wrapping your CDK8s app with local development tooling, enabling deploying your app to a [`k3d`](https://k3d.io/) cluster with automatic image building with `kbld`, pushing to local registry, and deploying to the local cluster with [`kapp`](https://carvel.dev/kapp/).
 - [cdk8s-opinionated-cli](./packages/cdk8s-opinionated-cli) - A library for wrapping your CDK8s apps with an opinionated CLI for synthesis, image building, deploying. It also includes `cdk8s-local` for local development support.
 

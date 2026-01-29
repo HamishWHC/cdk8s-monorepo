@@ -1,5 +1,5 @@
 import { Chart, Size, type ChartProps } from "cdk8s";
-import { PersistentVolumeAccessMode, StatefulSet, Volume } from "cdk8s-plus-32";
+import { Deployment, Service } from "cdk8s-plus-32";
 import type { Construct } from "constructs";
 import { PersistentVolume } from "../../constructs/persistent-volume";
 import { getConfig } from "../../schema/config";
@@ -9,7 +9,8 @@ import { addNamespace } from "../system/namespaces";
 
 export class OpenLDAPChart extends Chart {
 	pvc: PersistentVolume;
-	statefulSet: StatefulSet;
+	deployment: Deployment;
+	service: Service;
 
 	constructor(scope: Construct, id: string, props?: ChartProps) {
 		super(scope, id, props);
@@ -25,7 +26,7 @@ export class OpenLDAPChart extends Chart {
 			size: Size.gibibytes(1),
 		});
 
-		this.statefulSet = new StatefulSet(this, "default", {
+		this.deployment = new Deployment(this, "default", {
 			replicas: 1,
 			containers: [
 				{
@@ -34,15 +35,15 @@ export class OpenLDAPChart extends Chart {
 						{ number: 389, name: "ldap" },
 						{ number: 636, name: "ldaps" },
 					],
-					envVariables: {
-						LDAP_ORGANISATION: { value: "Homelab" },
-						LDAP_DOMAIN: { value: config.domains.main.domain },
-						LDAP_ADMIN_PASSWORD: { value: "admin" },
-					},
+					// envVariables: {
+					// 	LDAP_ORGANISATION: { value: "Homelab" },
+					// 	LDAP_DOMAIN: { value: config.domains.main.domain },
+					// 	LDAP_ADMIN_PASSWORD: { value: "admin" },
+					// },
 					volumeMounts: [
 						{
 							path: "/var/lib/ldap",
-							volume: Volume.fromName(this, "data-volume", "data-volume"),
+							volume: this.pvc.volume,
 						},
 						{
 							path: "/etc/ldap/slapd.d",
@@ -56,15 +57,15 @@ export class OpenLDAPChart extends Chart {
 					...containerDefaults(this),
 				},
 			],
-			volumeClaimTemplates: [
-				{
-					name: "data-volume",
-					storage: Size.gibibytes(1),
-					accessModes: [PersistentVolumeAccessMode.READ_WRITE_ONCE],
-					storageClassName: "openebs-hostpath",
-				},
-			],
 			...workloadDefaults(this),
+		});
+
+		this.service = new Service(this, "service", {
+			selector: this.deployment,
+			ports: [
+				{ port: 389, targetPort: 389, name: "ldap" },
+				{ port: 636, targetPort: 636, name: "ldaps" },
+			],
 		});
 	}
 }

@@ -1,7 +1,7 @@
 {
 	"name": "cdk8s-local",
-	"version": "0.0.0",
-	"private": true,
+	"version": "0.1.0",
+	"private": false,
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
@@ -18,7 +18,7 @@
 	"dependencies": {
 		"arktype": "catalog:",
 		"cdk8s": "catalog:",
-		"cdk8s-kbld": "workspace:*",
+		"cdk8s-kbld2": "workspace:*",
 		"cmd-ts": "catalog:",
 		"constructs": "catalog:",
 		"is-wsl": "^3.1.0",

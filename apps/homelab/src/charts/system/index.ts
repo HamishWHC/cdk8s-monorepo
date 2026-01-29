@@ -40,7 +40,6 @@ export class SystemChartsConstruct extends Construct {
 		this.dnsOverrides = new DNSOverridesChart(this, "dns-overrides", { ...props.defaultChartProps });
 		this.cilium = new CiliumChart(this, "cilium", { ...props.defaultChartProps });
 		if (!environment.isK3d) {
-			console.log("Adding OpenEBS chart as environment is not k3d");
 			this.openebs = new OpenEBSChart(this, "openebs", { ...props.defaultChartProps });
 		}
 

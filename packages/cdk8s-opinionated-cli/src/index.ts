@@ -1,6 +1,7 @@
 import type { ArgTypes } from "@repo/utils/cmd-ts-types";
 import { logger } from "@repo/utils/logger";
 import { $ } from "bun";
+import { KbldConfig } from "cdk8s-kbld2";
 import { binary, boolean, command, flag, run, type Runner, subcommands } from "cmd-ts";
 import type { ArgParser } from "cmd-ts/dist/cjs/argparser";
 import type { Aliased, Descriptive } from "cmd-ts/dist/cjs/helpdoc";
@@ -21,7 +22,7 @@ export async function cdk8sOpinionatedCliCommand<Arguments extends ArgTypes, Dat
 			synth: config.synth,
 			...config.subcommands.local,
 			args: {
-				// Spreading `undefined` safe and results in no additional arguments, which is expected behaviour.
+				// Spreading `undefined` is safe and results in no additional arguments, which is the expected behaviour.
 				...config.args!,
 				// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
 				...config.subcommands.local?.args!,
@@ -64,8 +65,7 @@ export async function cdk8sOpinionatedCliCommand<Arguments extends ArgTypes, Dat
 					return;
 				}
 
-				const { KbldConfig } = await import("cdk8s-kbld");
-				if (app.node.findAll(ConstructOrder.POSTORDER) instanceof KbldConfig) {
+				if (app.node.findAll(ConstructOrder.POSTORDER).find((c) => c instanceof KbldConfig)) {
 					logger.info("Detected kbld config construct, running kbld...");
 					try {
 						const buffer = await $`kbld -f ${app.outdir}`.arrayBuffer();

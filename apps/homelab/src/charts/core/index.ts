@@ -1,4 +1,4 @@
-import type { ChartProps } from "cdk8s";
+import { type ChartProps } from "cdk8s";
 import { Construct } from "constructs";
 import { OpenLDAPChart } from "./openldap";
 import { PHPLDAPAdminChart } from "./phpldapadmin";
@@ -22,7 +22,7 @@ export class CoreChartsConstruct extends Construct {
 		this.phpLDAPAdmin = new PHPLDAPAdminChart(this, "phpldapadmin", {
 			...props.defaultChartProps,
 			namespace: "auth",
-			ldapService: this.openLDAP.statefulSet.service,
+			ldapService: this.openLDAP.service,
 		});
 		// this.authelia = new AutheliaChart(this, "authelia", {
 		// 	...props.defaultChartProps,

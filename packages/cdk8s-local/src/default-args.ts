@@ -17,7 +17,7 @@ export const defaultArgs = {
 		type: boolean,
 		short: "b",
 		long: "build",
-		description: "only run the synth and build steps, skip deploy step (will skip cluster creation)",
+		description: "only run the synth and build (and push) steps, skip deploy step (will NOT skip cluster creation)",
 	}),
 };
 export type DefaultArgs = typeof defaultArgs;

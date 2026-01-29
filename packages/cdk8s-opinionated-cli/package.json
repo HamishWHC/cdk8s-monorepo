@@ -1,7 +1,7 @@
 {
 	"name": "cdk8s-opinionated-cli",
-	"version": "0.0.0",
-	"private": true,
+	"version": "0.1.0",
+	"private": false,
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
@@ -17,7 +17,7 @@
 	},
 	"dependencies": {
 		"cdk8s": "catalog:",
-		"cdk8s-kbld": "workspace:*",
+		"cdk8s-kbld2": "workspace:*",
 		"cdk8s-local": "workspace:*",
 		"cmd-ts": "catalog:",
 		"constructs": "catalog:",

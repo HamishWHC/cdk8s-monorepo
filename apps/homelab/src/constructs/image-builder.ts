@@ -1,7 +1,7 @@
 import { createContext } from "cdk-typed-context";
 import { Chart, type ChartProps } from "cdk8s";
-import { KbldConfig, type KbldConfigProps } from "cdk8s-kbld";
-import type { Destination, Source } from "cdk8s-kbld/types";
+import { KbldConfig, type KbldConfigProps } from "cdk8s-kbld2";
+import type { Destination, Source } from "cdk8s-kbld2/types";
 import { Construct } from "constructs";
 import { getConfig } from "../schema/config";
 

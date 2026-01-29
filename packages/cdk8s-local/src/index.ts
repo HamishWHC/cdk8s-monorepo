@@ -2,7 +2,7 @@ import type { ArgTypes } from "@repo/utils/cmd-ts-types";
 import { logger } from "@repo/utils/logger";
 import { resolveThunk } from "@repo/utils/thunk";
 import { $ } from "bun";
-import { KbldConfig } from "cdk8s-kbld";
+import { KbldConfig } from "cdk8s-kbld2";
 import { binary, command, run } from "cmd-ts";
 import { ConstructOrder } from "constructs";
 import { rm } from "fs/promises";
@@ -13,7 +13,7 @@ import { defaultArgs } from "./default-args";
 import { getK3dNodes } from "./get-k3d-nodes";
 import { getRegistry } from "./get-registry";
 import { resolveK3dConfig, type K3dConfigResolution } from "./k3d-config";
-import { checkRequirements, DEFAULT_REQUIREMENTS } from "./requirements";
+import { checkRequirements, CommonRequirements, DEFAULT_REQUIREMENTS } from "./requirements";
 
 type ManifestSource = { type: "directory"; path: string } | { type: "buffer"; buffer: ArrayBuffer };
 
@@ -63,12 +63,15 @@ export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Conf
 				registry = k3dConfigResolution.registry;
 			}
 
-			logger.info("Running synth (generating manifests)...");
-			const app = await config.synth({
+			const synthCtx = {
 				...ctx,
 				create,
 				registry,
-			});
+			};
+			synthCtx.data = (await config.hooks?.preSynth?.(synthCtx)) ?? synthCtx.data;
+
+			logger.info("Running synth (generating manifests)...");
+			const app = await config.synth(synthCtx);
 			await rm(app.outdir, { recursive: true, force: true });
 			app.synth();
 
@@ -76,32 +79,6 @@ export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Conf
 				logger.info(
 					"Synth complete, skipping build and deploy, find manifests in " + path.relative(process.cwd(), app.outdir),
 				);
-				return;
-			}
-
-			let manifestSource: ManifestSource = { type: "directory" as const, path: app.outdir };
-			if (app.node.findAll(ConstructOrder.POSTORDER).find((c) => c instanceof KbldConfig)) {
-				logger.info("Detected kbld config construct, running kbld...");
-				try {
-					manifestSource = { type: "buffer" as const, buffer: await $`kbld -f ${app.outdir}`.arrayBuffer() };
-				} catch (e) {
-					if (e instanceof $.ShellError) {
-						logger.error(e.stderr.toString("utf-8"));
-						logger.fatal("Failed to build images from manifests.");
-						return 1;
-					}
-					throw e;
-				}
-			} else if (args.build) {
-				logger.warn(
-					"The --build flag was set but no kbld config was found in the app. Skipping build step - no manifests will be emitted on stdout.",
-				);
-			}
-
-			if (args.build) {
-				if (manifestSource.type === "buffer") {
-					process.stdout.write(Buffer.from(manifestSource.buffer));
-				}
 				return;
 			}
 
@@ -145,6 +122,32 @@ export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Conf
 				}
 			}
 
+			let manifestSource: ManifestSource = { type: "directory" as const, path: app.outdir };
+			if (app.node.findAll(ConstructOrder.POSTORDER).find((c) => c instanceof KbldConfig)) {
+				logger.info("Detected kbld config construct, running kbld...");
+				try {
+					manifestSource = { type: "buffer" as const, buffer: await $`kbld -f ${app.outdir}`.arrayBuffer() };
+				} catch (e) {
+					if (e instanceof $.ShellError) {
+						logger.error(e.stderr.toString("utf-8"));
+						logger.fatal("Failed to build images from manifests.");
+						return 1;
+					}
+					throw e;
+				}
+			} else if (args.build) {
+				logger.warn(
+					"The --build flag was set but no kbld config was found in the app. Skipping build step - no manifests will be emitted on stdout.",
+				);
+			}
+
+			if (args.build) {
+				if (manifestSource.type === "buffer") {
+					process.stdout.write(Buffer.from(manifestSource.buffer));
+				}
+				return;
+			}
+
 			logger.info("Applying manifests to local cluster...");
 
 			// TODO: Set KUBECONFIG for kapp to use the k3d cluster config directly, rather than relying on k3d setting current-context.
@@ -185,4 +188,4 @@ export async function cdk8sLocal<Arguments extends ArgTypes, Data>(config: Confi
 	await run(binary(cmd), process.argv);
 }
 
-export { isWsl };
+export { CommonRequirements, isWsl };
