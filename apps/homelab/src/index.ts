@@ -1,3 +1,4 @@
+import { CONTEXT_THING, createContext } from "cdk-typed-context";
 import { App, YamlOutputType } from "cdk8s";
 import { RootConstruct } from "./charts";
 import type { Config } from "./schema/config";
@@ -12,6 +13,10 @@ export interface SynthOptions {
 
 export const synth = async (options: SynthOptions) => {
 	await addHelmRepos();
+
+	const a = createContext("hello");
+	const b = CONTEXT_THING;
+	console.log(b);
 
 	const app = new App({
 		outdir: OUT_DIR,

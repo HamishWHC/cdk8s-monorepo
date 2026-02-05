@@ -2,20 +2,15 @@
 	"$schema": "https://turborepo.com/schema.json",
 	"ui": "tui",
 	"tasks": {
-		"build": {
-			"dependsOn": ["^build"],
-			"inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
-			"outputs": [".next/**", "!.next/cache/**"]
-		},
 		"lint": {
 			"dependsOn": ["^lint"]
 		},
 		"typecheck": {
 			"dependsOn": ["^typecheck"]
 		},
-		"dev": {
-			"cache": false,
-			"persistent": true
+		"dist": {
+			"dependsOn": ["^dist"],
+			"outputs": ["dist/**"]
 		}
 	}
 }

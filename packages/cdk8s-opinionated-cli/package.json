@@ -3,16 +3,16 @@
 	"version": "0.1.0",
 	"private": false,
 	"type": "module",
-	"exports": {
-		".": "./src/index.ts",
-		"./*": [
-			"./src/*.ts",
-			"./src/*/index.ts"
-		]
-	},
+	"files": [
+		"dist"
+	],
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
+		"dist": "bunup",
 		"generate-config-types": "bun run ./scripts/generate-config-types.ts"
 	},
 	"dependencies": {
@@ -28,6 +28,32 @@
 		"@repo/typescript-config": "workspace:*",
 		"@types/bun": "catalog:",
 		"eslint": "catalog:",
-		"typescript": "catalog:"
+		"typescript": "catalog:",
+		"bunup": "catalog:"
+	},
+	"exports": {
+		".": {
+			"bun": "./src/index.ts",
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		},
+		"./*": {
+			"bun": "./src/*.ts",
+			"require": {
+				"types": "./dist/*.d.cts",
+				"default": "./dist/*.cjs"
+			},
+			"import": {
+				"types": "./dist/*.d.ts",
+				"default": "./dist/*.js"
+			}
+		},
+		"./package.json": "./package.json"
 	}
 }

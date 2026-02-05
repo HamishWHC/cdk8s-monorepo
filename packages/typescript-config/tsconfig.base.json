@@ -32,6 +32,10 @@
 		"declaration": true,
 		"declarationMap": true,
 		"noEmit": true,
-		"incremental": false
+		"incremental": false,
+
+		// To ensure that we can import from publishable workspace packages _without_ needing them to be built first,
+		// we tell TypeScript to use bun's custom condition, which is expected to point to source files.
+		"customConditions": ["bun"]
 	}
 }

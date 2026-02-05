@@ -3,5 +3,5 @@
 	"compilerOptions": {
 		"noEmit": false
 	},
-	"include": ["src", "../../packages/cdk8s-opinionated-cli/src/subcommands/local/requirements.ts"]
+	"include": ["src"]
 }

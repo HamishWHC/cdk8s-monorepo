@@ -37,7 +37,7 @@ export function createContext<T>(key: string, options?: { errorOnMissing?: strin
 				return null;
 			}
 		},
-		set(scope: Construct, value: T) {
+		set(scope: Construct, value: T): void {
 			scope.node.setContext(uniqueKey, value);
 		},
 	};
