@@ -14,27 +14,27 @@ npm i cdk-typed-context
 import { createContext } from "cdk-typed-context";
 
 export const EnvContext = createContext<{ region: string; accountId: string }>("env", {
-    errorOnMissing: "An environment has not been provided.",
+	errorOnMissing: "An environment has not been provided.",
 });
 
 // app.ts
 EnvContext.set(this, {
-    region: "us-east-1",
-    accountId: "123456789012",
+	region: "us-east-1",
+	accountId: "123456789012",
 });
 
 // some-child-construct.ts
-const env = EnvContext.get(this)
+const env = EnvContext.get(this);
 
 new Deployment(this, "example-deployment", {
-    containers: [
-        {
-            image: "some-image",
-            envVariables: {
-                REGION: { value: env.region },
-                ACCOUNT_ID: { value: env.accountId },
-            }
-        },
-    ]
-})
+	containers: [
+		{
+			image: "some-image",
+			envVariables: {
+				REGION: { value: env.region },
+				ACCOUNT_ID: { value: env.accountId },
+			},
+		},
+	],
+});
 ```

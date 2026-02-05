@@ -3,46 +3,37 @@
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
-	"files": [
-		"dist"
-	],
-	"main": "./dist/index.cjs",
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
-		"dist": "tsup"
+		"dist": "bun --bun tsdown"
 	},
 	"dependencies": {
 		"tslog": "^4.10.2"
 	},
-	"devDependencies": {
-		"tsup": "catalog:"
-	},
 	"exports": {
 		".": {
 			"bun": "./src/index.ts",
-			"require": {
-				"types": "./dist/index.d.cts",
-				"default": "./dist/index.cjs"
-			},
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
+			"types": "./dist/index.d.mts",
+			"default": "./dist/index.mjs"
 		},
 		"./*": {
-			"bun": "./src/*.ts",
-			"require": {
-				"types": "./dist/*.d.cts",
-				"default": "./dist/*.cjs"
-			},
-			"import": {
-				"types": "./dist/*.d.ts",
-				"default": "./dist/*.js"
-			}
+			"bun": [
+				"./src/*.ts",
+				"./src/*/index.ts"
+			],
+			"types": [
+				"./dist/*.d.mts",
+				"./dist/*/index.d.mts"
+			],
+			"default": [
+				"./dist/*.mjs",
+				"./dist/*/index.mjs"
+			]
 		},
 		"./package.json": "./package.json"
+	},
+	"devDependencies": {
+		"tsdown": "catalog:"
 	}
 }

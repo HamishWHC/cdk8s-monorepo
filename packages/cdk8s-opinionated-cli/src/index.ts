@@ -10,6 +10,8 @@ import { rm } from "fs/promises";
 import path from "path";
 import type { Config } from "./config";
 
+export type { Config } from "./config";
+
 export async function cdk8sOpinionatedCliCommand<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes>(
 	config: Config<Arguments, Data, LocalArguments>,
 ) {

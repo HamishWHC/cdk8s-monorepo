@@ -3,7 +3,7 @@ import type { CommonContext, CommonStartupContext } from "@repo/utils/cli-contex
 import type { ArgTypes, Output } from "@repo/utils/cmd-ts-types";
 import type { PickPartial } from "@repo/utils/pick-partial";
 import type { App } from "cdk8s";
-import { Config as LocalConfig } from "cdk8s-local/config";
+import { Config as LocalConfig } from "cdk8s-local";
 
 type FeatureToggle<T extends object> = { enabled: false } | ({ enabled: true } & T);
 

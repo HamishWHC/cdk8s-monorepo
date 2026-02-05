@@ -32,7 +32,7 @@ await cdk8sLocal({
 
 		new YourConstruct(app, {
 			someCustomArg,
-            registry,
+			registry,
 		});
 
 		return app;
@@ -58,6 +58,7 @@ await cdk8sLocal({
 ```
 
 You can then deploy your app locally with:
+
 ```
 bun local.ts --some-custom-arg value
 ```
@@ -65,14 +66,17 @@ bun local.ts --some-custom-arg value
 > The wrapper depends on some CLI tools being available on your PATH, primarily `k3d`, `kapp`, `kbld` (even if you don't use `cdk8s-kbld2` or the image build step, sorry), `kubectl` and `docker`. The wrapper will check for these and throw an error if they are not found.
 
 ## cdk8s-kbld2 Integration
+
 If a `KbldConfig` construct is detected in your app, `kbld` will be automatically run against your app's generated manifests, and the resulting manifests will be dumped to stdout.
 
 ## Local Registry
+
 By default, a local registry will be created by k3d for you to push your images to. This registry is passed to your `synth` function so you can push images to it (e.g. with `cdk8s-kbld2` - or `cdk8s-image` if you really want to).
 
 > Security note: This package uses a subdomain of `k3d.hamishwhc.com`, which resolves to localhost, as the name of the local registry. There _is_ potential here for me to swap the DNS record out from under you in a DNS rebinding attack - if you are concerned, you can set up your own DNS entry that resolves to localhost and pass that in via `k3d.registryName`. See [the related k3d documentation](https://k3d.io/v5.1.0/usage/registries/#preface-referencing-local-registries) - this is a method of achieving option 2 here, without needing to modify `/etc/hosts`.
 
 ## Configuration
+
 All configuration options include documentation within the property descriptions, so you can hover over them in your IDE to see what they do.
 
-Some convenience options have been added to the `k3d` configuration to make local development easier. The most notable is `configureCilium`, which sets up k3d as compatible with Cilium by disabling the default CNI and network policies, and then running some ✨ magic ✨ `docker` commands (note that magic here means that I do not understand what the f*ck they are doing but they do seem to work for me). This option may be rather brittle, so if you run into issues please open an issue or PR!
+Some convenience options have been added to the `k3d` configuration to make local development easier. The most notable is `configureCilium`, which sets up k3d as compatible with Cilium by disabling the default CNI and network policies, and then running some ✨ magic ✨ `docker` commands (note that magic here means that I do not understand what the f\*ck they are doing but they do seem to work for me). This option may be rather brittle, so if you run into issues please open an issue or PR!

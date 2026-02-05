@@ -14,6 +14,7 @@ function randomRegistryPort() {
 	return 10000 + Math.floor(Math.random() * 50000);
 }
 
+export { K3DSimpleConfigV1Alpha5 };
 export type K3dSimpleConfig = K3DSimpleConfigV1Alpha5;
 
 export interface BindMountVolume {

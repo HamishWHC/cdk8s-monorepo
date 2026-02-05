@@ -13,9 +13,21 @@ import { defaultArgs } from "./default-args";
 import { getK3dNodes } from "./get-k3d-nodes";
 import { getRegistry } from "./get-registry";
 import { resolveK3dConfig, type K3dConfigResolution } from "./k3d-config";
-import { checkRequirements, CommonRequirements, DEFAULT_REQUIREMENTS } from "./requirements";
+import { checkRequirements, DEFAULT_REQUIREMENTS, type CommonRequirements } from "./requirements";
 
 type ManifestSource = { type: "directory"; path: string } | { type: "buffer"; buffer: ArrayBuffer };
+
+export type {
+	BindMountVolume,
+	EnvironmentVariable,
+	K3dConfig,
+	K3dConfigResolution,
+	K3dSimpleConfig,
+	K3DSimpleConfigV1Alpha5,
+	K3sArg,
+	Port,
+} from "./k3d-config";
+export { CommonRequirements, Config, isWsl };
 
 /**
  * Creates a cdk8s-local CLI command based on the provided configuration.
@@ -187,5 +199,3 @@ export async function cdk8sLocal<Arguments extends ArgTypes, Data>(config: Confi
 	const cmd = cdk8sLocalCommand(config);
 	await run(binary(cmd), process.argv);
 }
-
-export { CommonRequirements, isWsl };

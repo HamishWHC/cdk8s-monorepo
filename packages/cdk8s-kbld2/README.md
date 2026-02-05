@@ -2,7 +2,7 @@
 
 **TLDR: A cdk8s construct for `kbld` configurations.**
 
-Whenever I use cdk8s, I always need to build and push my container images to a registry. Currently, [`cdk8s-image`](https://github.com/cdk8s-team/cdk8s-image) enables building and pushing images *while generating manifests*. This causes side effects while generating configuration, which I've never been a massive fan of, but it is also limited by cdk8s' non-concurrent model, preventing building and/or pushing images in parallel (or using build tools other than Docker!).
+Whenever I use cdk8s, I always need to build and push my container images to a registry. Currently, [`cdk8s-image`](https://github.com/cdk8s-team/cdk8s-image) enables building and pushing images _while generating manifests_. This causes side effects while generating configuration, which I've never been a massive fan of, but it is also limited by cdk8s' non-concurrent model, preventing building and/or pushing images in parallel (or using build tools other than Docker!).
 
 There's a tool that does all this already (plus resolving and locking to digests, among other benefits): [`kbld`](https://github.com/carvel-dev/kbld)
 
@@ -19,32 +19,32 @@ import { KbldConfig } from "cdk8s-kbld2";
 // ...
 
 new Deployment(this, "example-deployment", {
-    containers: [
-        {
-            image: "some-image-name",
-            // ...
-        },
+	containers: [
+		{
+			image: "some-image-name",
+			// ...
+		},
 		{
 			image: "nginx:latest",
-            // ...
+			// ...
 		},
-    ]
-})
+	],
+});
 
 new KbldConfig(this, "kbld", {
-    sources: [
-        {
-            image: "some-image-name",
-            path: "/path/to/build/context",
-        }
-    ],
-    destinations: [
-        {
-            image: "some-image-name",
-            newImage: "ghcr.io/your-username/some-image-name"
-        }
-    ]
-})
+	sources: [
+		{
+			image: "some-image-name",
+			path: "/path/to/build/context",
+		},
+	],
+	destinations: [
+		{
+			image: "some-image-name",
+			newImage: "ghcr.io/your-username/some-image-name",
+		},
+	],
+});
 ```
 
 <details>
@@ -125,12 +125,15 @@ sources:
   - image: some-image-name
     path: /path/to/build/context
 ```
+
 </details>
 
 ## Contributions and Roadmap
-If you find a bug (fairly likely given the type definitions were translated from the `kbld` docs - carvel team, *please* use JSON schema, ty) please do post an issue or make a PR.
+
+If you find a bug (fairly likely given the type definitions were translated from the `kbld` docs - carvel team, _please_ use JSON schema, ty) please do post an issue or make a PR.
 
 I have plans to add a resolver and/or a higher-level construct to avoid the need to even think much about the `kbld` config, but will be experimenting with this on my homelab manifests before beginning on that.
 
 ## Why is there a 2?
-During a [CTF competition](https://en.wikipedia.org/wiki/Capture_the_flag_(cybersecurity)), I published a package containing code to exploit a CSP vulnerability to my NPM account as part of a solution. The original `cdk8s-kbld2` was under the same account. My NPM account was soon banned (and _every_ package under my account removed). In hindsight, should've used a throwaway account, but oh well. I could re-register the account name but the package name is forever taken :/
+
+During a [CTF competition](<https://en.wikipedia.org/wiki/Capture_the_flag_(cybersecurity)>), I published a package containing code to exploit a CSP vulnerability to my NPM account as part of a solution. The original `cdk8s-kbld2` was under the same account. My NPM account was soon banned (and _every_ package under my account removed). In hindsight, should've used a throwaway account, but oh well. I could re-register the account name but the package name is forever taken :/

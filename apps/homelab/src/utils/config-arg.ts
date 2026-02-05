@@ -1,5 +1,6 @@
 import type { Type } from "cmd-ts";
-import { exists } from "fs/promises";
+import { existsSync } from "fs";
+import {} from "fs/promises";
 import path from "path";
 import { type Config, readConfig } from "../schema/config";
 import { APP_ROOT } from "./paths";
@@ -13,14 +14,12 @@ export const ConfigArg: Type<string, ConfigArg> = {
 			path.join(APP_ROOT, fn),
 		);
 
-		const filename = (
-			await Promise.all(
-				files.map(async (filename) => ({
-					filename,
-					exists: await exists(filename),
-				})),
-			)
-		).find(({ exists }) => exists)?.filename;
+		const filename = files
+			.map((filename) => ({
+				filename,
+				exists: existsSync(filename),
+			}))
+			.find(({ exists }) => exists)?.filename;
 		if (filename === undefined) {
 			throw new Error(`Could not find configuration file for environment "${name}".`);
 		}
