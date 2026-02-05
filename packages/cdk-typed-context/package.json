@@ -12,14 +12,14 @@
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
-		"dist": "bunup"
+		"dist": "tsup"
 	},
 	"devDependencies": {
 		"constructs": "catalog:",
 		"@repo/eslint-config": "workspace:*",
 		"@repo/typescript-config": "workspace:*",
 		"@repo/utils": "workspace:*",
-		"bunup": "catalog:",
+		"tsup": "catalog:",
 		"eslint": "catalog:",
 		"typescript": "catalog:"
 	},

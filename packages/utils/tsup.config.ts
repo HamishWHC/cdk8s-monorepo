@@ -1,9 +1,10 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-	entry: "src/**/*.ts",
+	entry: ["src/**/*.ts"],
 	format: ["cjs", "esm"],
-	packages: "external",
+	external: ["*"],
 	noExternal: [/^@repo\/.*$/],
-	dts: { inferTypes: true, resolve: false },
+	dts: {},
+	clean: true,
 });

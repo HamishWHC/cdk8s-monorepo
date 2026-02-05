@@ -3,20 +3,46 @@
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
-	"exports": {
-		".": "./src/index.ts",
-		"./*": [
-			"./src/*.ts",
-			"./src/*/index.ts"
-		]
-	},
+	"files": [
+		"dist"
+	],
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"dist": "tsup"
 	},
 	"dependencies": {
-		"tslog": "^4.10.2",
-		"bunup": "catalog:",
-		"prettier": "catalog:"
+		"tslog": "^4.10.2"
+	},
+	"devDependencies": {
+		"tsup": "catalog:"
+	},
+	"exports": {
+		".": {
+			"bun": "./src/index.ts",
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		},
+		"./*": {
+			"bun": "./src/*.ts",
+			"require": {
+				"types": "./dist/*.d.cts",
+				"default": "./dist/*.cjs"
+			},
+			"import": {
+				"types": "./dist/*.d.ts",
+				"default": "./dist/*.js"
+			}
+		},
+		"./package.json": "./package.json"
 	}
 }

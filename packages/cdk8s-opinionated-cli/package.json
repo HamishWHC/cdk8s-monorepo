@@ -12,7 +12,7 @@
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
-		"dist": "bunup",
+		"dist": "tsup",
 		"generate-config-types": "bun run ./scripts/generate-config-types.ts"
 	},
 	"dependencies": {
@@ -24,12 +24,14 @@
 		"@repo/utils": "workspace:*"
 	},
 	"devDependencies": {
+		"@microsoft/api-extractor": "^7.56.2",
 		"@repo/eslint-config": "workspace:*",
 		"@repo/typescript-config": "workspace:*",
 		"@types/bun": "catalog:",
+		"ajv": "^8.17.1",
 		"eslint": "catalog:",
-		"typescript": "catalog:",
-		"bunup": "catalog:"
+		"tsup": "catalog:",
+		"typescript": "catalog:"
 	},
 	"exports": {
 		".": {
