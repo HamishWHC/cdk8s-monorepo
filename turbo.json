@@ -11,6 +11,9 @@
 		"dist": {
 			"dependsOn": ["^dist"],
 			"outputs": ["dist/**"]
+		},
+		"publish": {
+			"dependsOn": ["^dist", "^publish"]
 		}
 	}
 }

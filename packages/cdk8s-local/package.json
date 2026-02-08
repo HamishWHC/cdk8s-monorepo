@@ -7,6 +7,7 @@
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
 		"dist": "bun --bun tsdown",
+		"publish": "bun publish --tolerate-republish",
 		"generate-config-types": "bun run ./scripts/generate-config-types.ts"
 	},
 	"dependencies": {

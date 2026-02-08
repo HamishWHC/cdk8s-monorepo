@@ -6,7 +6,8 @@
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
-		"dist": "bun --bun tsdown"
+		"dist": "bun --bun tsdown",
+		"publish": "bun publish --tolerate-republish"
 	},
 	"dependencies": {
 		"cdk8s": "catalog:",

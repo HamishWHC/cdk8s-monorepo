@@ -19,3 +19,7 @@ I'm using this to develop a series of opinionated tools and libraries around CDK
 - [@repo/utils](./packages/utils) - A collection of utilities used throughout this repository.
 - [@repo/typescript-config](./packages/typescript-config) - Shared TypeScript configuration for all packages in this monorepo.
 - [@repo/eslint-config](./packages/eslint-config) - Shared ESLint configuration for all packages in this monorepo.
+
+## Versioning and Publishing
+
+This repository uses [Changesets](https://github.com/changesets/changesets) for versioning but _not_ publishing packages. Packages are published using `bun publish` so that it can correctly resolve workspace and catalog dependencies. This is pending https://github.com/changesets/changesets/pull/1789 after which I may switch to using Changesets for publishing as well.

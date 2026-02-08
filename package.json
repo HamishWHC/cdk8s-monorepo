@@ -6,7 +6,8 @@
 		"typecheck": "turbo run typecheck",
 		"dist": "turbo run dist",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"changeset": "changeset",
+		"cs": "changeset",
+		"publish": "turbo run publish && changeset tag",
 		"cloc": "cloc --exclude-dir=imports,dist $(git ls-files)"
 	},
 	"devDependencies": {
