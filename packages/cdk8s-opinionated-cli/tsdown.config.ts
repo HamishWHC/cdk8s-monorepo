@@ -1,3 +1,4 @@
+import { publishSourceCustomExports } from "@repo/utils/publish-source-custom-export";
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
@@ -7,6 +8,6 @@ export default defineConfig({
 	sourcemap: true,
 	dts: true,
 	exports: {
-		devExports: "bun",
+		customExports: publishSourceCustomExports,
 	},
 });

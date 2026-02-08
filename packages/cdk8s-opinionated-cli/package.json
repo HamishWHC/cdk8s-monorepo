@@ -6,8 +6,7 @@
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
-		"dist": "bun --bun tsdown",
-		"generate-config-types": "bun run ./scripts/generate-config-types.ts"
+		"dist": "bun --bun tsdown"
 	},
 	"dependencies": {
 		"cdk8s": "catalog:",
@@ -31,11 +30,5 @@
 			"default": "./dist/index.mjs"
 		},
 		"./package.json": "./package.json"
-	},
-	"publishConfig": {
-		"exports": {
-			".": "./dist/index.mjs",
-			"./package.json": "./package.json"
-		}
 	}
 }

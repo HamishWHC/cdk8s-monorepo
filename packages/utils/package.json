@@ -18,18 +18,9 @@
 			"default": "./dist/index.mjs"
 		},
 		"./*": {
-			"bun": [
-				"./src/*.ts",
-				"./src/*/index.ts"
-			],
-			"types": [
-				"./dist/*.d.mts",
-				"./dist/*/index.d.mts"
-			],
-			"default": [
-				"./dist/*.mjs",
-				"./dist/*/index.mjs"
-			]
+			"bun": "./src/*.ts",
+			"types": "./dist/*.d.mts",
+			"default": "./dist/*.mjs"
 		},
 		"./package.json": "./package.json"
 	},

@@ -6,9 +6,11 @@
 		"typecheck": "turbo run typecheck",
 		"dist": "turbo run dist",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+		"changeset": "changeset",
 		"cloc": "cloc --exclude-dir=imports,dist $(git ls-files)"
 	},
 	"devDependencies": {
+		"@changesets/cli": "^2.29.8",
 		"prettier": "catalog:",
 		"turbo": "^2.5.8",
 		"typescript": "catalog:"
