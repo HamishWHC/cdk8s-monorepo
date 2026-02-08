@@ -1,3 +1,4 @@
 .turbo/
+scripts/
 eslint.config.mjs
 tsdown.config.ts
