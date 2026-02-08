@@ -1,5 +1,5 @@
-import { assert } from "@repo/utils/assert";
-import { logger } from "@repo/utils/logger";
+import { assert } from "@hamishwhc/cdk8s-monorepo-utils/assert";
+import { logger } from "@hamishwhc/cdk8s-monorepo-utils/logger";
 import { cdk8sOpinionatedCli } from "cdk8s-opinionated-cli";
 import { option, optional } from "cmd-ts";
 import path from "path";

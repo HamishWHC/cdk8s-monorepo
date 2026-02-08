@@ -7,16 +7,16 @@
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
 		"dist": "bun --bun tsdown",
-		"publish": "bun publish --tolerate-republish"
+		"publish-pkg": "bun publish --tolerate-republish"
 	},
 	"dependencies": {
+		"constructs": "catalog:",
 		"cdk8s": "catalog:"
 	},
 	"devDependencies": {
 		"cdk8s-plus-32": "catalog:",
 		"typescript": "catalog:",
-		"constructs": "catalog:",
-		"@repo/utils": "workspace:*",
+		"@hamishwhc/cdk8s-monorepo-utils": "workspace:*",
 		"tsdown": "catalog:"
 	},
 	"exports": {

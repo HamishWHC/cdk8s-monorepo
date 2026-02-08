@@ -1,7 +1,7 @@
-import type { Awaitable } from "@repo/utils/awaitable";
-import type { CommonContext, CommonStartupContext } from "@repo/utils/cli-contexts";
-import type { ArgTypes, Output } from "@repo/utils/cmd-ts-types";
-import type { PickPartial } from "@repo/utils/pick-partial";
+import type { Awaitable } from "@hamishwhc/cdk8s-monorepo-utils/awaitable";
+import type { CommonContext, CommonStartupContext } from "@hamishwhc/cdk8s-monorepo-utils/cli-contexts";
+import type { ArgTypes, Output } from "@hamishwhc/cdk8s-monorepo-utils/cmd-ts-types";
+import type { PickPartial } from "@hamishwhc/cdk8s-monorepo-utils/pick-partial";
 import type { App } from "cdk8s";
 import { Config as LocalConfig } from "cdk8s-local";
 

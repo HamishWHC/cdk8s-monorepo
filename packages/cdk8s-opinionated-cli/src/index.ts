@@ -1,5 +1,5 @@
-import type { ArgTypes } from "@repo/utils/cmd-ts-types";
-import { logger } from "@repo/utils/logger";
+import type { ArgTypes } from "@hamishwhc/cdk8s-monorepo-utils/cmd-ts-types";
+import { logger } from "@hamishwhc/cdk8s-monorepo-utils/logger";
 import { $ } from "bun";
 import { KbldConfig } from "cdk8s-kbld2";
 import { binary, boolean, command, flag, run, type Runner, subcommands } from "cmd-ts";

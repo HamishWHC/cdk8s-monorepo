@@ -1,6 +1,6 @@
-import type { ArgTypes } from "@repo/utils/cmd-ts-types";
-import { logger } from "@repo/utils/logger";
-import { resolveThunk } from "@repo/utils/thunk";
+import type { ArgTypes } from "@hamishwhc/cdk8s-monorepo-utils/cmd-ts-types";
+import { logger } from "@hamishwhc/cdk8s-monorepo-utils/logger";
+import { resolveThunk } from "@hamishwhc/cdk8s-monorepo-utils/thunk";
 import { $ } from "bun";
 import { KbldConfig } from "cdk8s-kbld2";
 import { binary, command, run } from "cmd-ts";

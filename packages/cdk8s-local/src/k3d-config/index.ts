@@ -1,4 +1,4 @@
-import type { Awaitable } from "@repo/utils/awaitable";
+import type { Awaitable } from "@hamishwhc/cdk8s-monorepo-utils/awaitable";
 import { YAML } from "bun";
 import type { RegistryInfo } from "../get-registry";
 import type { K3DSimpleConfigV1Alpha5, NodeFilters } from "./v1alpha5";

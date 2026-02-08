@@ -1,4 +1,4 @@
-import { assert } from "@repo/utils/assert";
+import { assert } from "@hamishwhc/cdk8s-monorepo-utils/assert";
 import { Chart, Duration } from "cdk8s";
 import { Secret, type ISecret } from "cdk8s-plus-32";
 import { Construct } from "constructs";

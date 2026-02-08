@@ -7,7 +7,7 @@
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
 		"dist": "bun --bun tsdown",
-		"publish": "bun publish --tolerate-republish"
+		"publish-pkg": "bun publish --tolerate-republish"
 	},
 	"dependencies": {
 		"cdk8s": "catalog:",
@@ -15,11 +15,11 @@
 		"cdk8s-local": "workspace:*",
 		"cmd-ts": "catalog:",
 		"constructs": "catalog:",
-		"@repo/utils": "workspace:*"
+		"@hamishwhc/cdk8s-monorepo-utils": "workspace:*"
 	},
 	"devDependencies": {
-		"@repo/eslint-config": "workspace:*",
-		"@repo/typescript-config": "workspace:*",
+		"@hamishwhc/cdk8s-monorepo-eslint-config": "workspace:*",
+		"@hamishwhc/cdk8s-monorepo-typescript-config": "workspace:*",
 		"@types/bun": "catalog:",
 		"eslint": "catalog:",
 		"tsdown": "catalog:",

@@ -1,9 +1,5 @@
 {
-  "name": "@repo/typescript-config",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@hamishwhc/cdk8s-monorepo-typescript-config",
+	"version": "0.0.0",
+	"private": true
 }

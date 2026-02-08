@@ -1,5 +1,5 @@
 {
-	"$schema": "https://turborepo.com/schema.json",
+	"$schema": "./node_modules/turbo/schema.json",
 	"ui": "tui",
 	"tasks": {
 		"lint": {
@@ -12,8 +12,9 @@
 			"dependsOn": ["^dist"],
 			"outputs": ["dist/**"]
 		},
-		"publish": {
-			"dependsOn": ["^dist", "^publish"]
+		"publish-pkg": {
+			"dependsOn": ["^dist", "dist", "^publish-pkg"],
+			"cache": false
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { logger } from "@repo/utils/logger";
+import { logger } from "@hamishwhc/cdk8s-monorepo-utils/logger";
 import { $ } from "bun";
 
 export const CommonRequirements = {

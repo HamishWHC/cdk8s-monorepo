@@ -1,15 +1,20 @@
 {
-	"name": "@repo/utils",
+	"name": "@hamishwhc/cdk8s-monorepo-utils",
 	"version": "0.0.0",
-	"private": true,
+	"private": false,
 	"type": "module",
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
-		"dist": "bun --bun tsdown"
+		"dist": "bun --bun tsdown",
+		"publish-pkg": "bun publish --tolerate-republish"
 	},
 	"dependencies": {
+		"cmd-ts": "catalog:",
 		"tslog": "^4.10.2"
+	},
+	"devDependencies": {
+		"tsdown": "catalog:"
 	},
 	"exports": {
 		".": {
@@ -23,8 +28,5 @@
 			"default": "./dist/*.mjs"
 		},
 		"./package.json": "./package.json"
-	},
-	"devDependencies": {
-		"tsdown": "catalog:"
 	}
 }

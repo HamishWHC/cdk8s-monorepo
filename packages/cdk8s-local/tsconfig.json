@@ -1,4 +1,4 @@
 {
-	"extends": "@repo/typescript-config/tsconfig.base.json",
+	"extends": "@hamishwhc/cdk8s-monorepo-typescript-config/tsconfig.base.json",
 	"include": ["src", "scripts", "tsdown.config.ts"]
 }
