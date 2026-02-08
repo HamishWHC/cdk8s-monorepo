@@ -1,5 +1,17 @@
 # cdk8s-local
 
+## 0.2.0
+
+### Minor Changes
+
+- Fixed dependency packaging errors and published `utils` rather than attempting to bundle it.
+
+### Patch Changes
+
+- Updated dependencies
+  - cdk8s-kbld2@0.2.0
+  - @hamishwhc/cdk8s-monorepo-utils@0.1.0
+
 ## 0.1.0
 
 ### Minor Changes

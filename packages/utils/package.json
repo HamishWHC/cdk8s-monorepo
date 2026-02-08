@@ -1,13 +1,13 @@
 {
 	"name": "@hamishwhc/cdk8s-monorepo-utils",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"private": false,
 	"type": "module",
 	"scripts": {
 		"lint": "eslint . --max-warnings 0",
 		"typecheck": "tsc --noEmit",
 		"dist": "bun --bun tsdown",
-		"publish-pkg": "bun publish --tolerate-republish"
+		"publish-pkg": "bun publish --tolerate-republish --access public"
 	},
 	"dependencies": {
 		"cmd-ts": "catalog:",
