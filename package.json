@@ -7,6 +7,7 @@
 		"dist": "turbo run dist",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
 		"cs": "changeset",
+		"version": "changeset version && rm bun.lock && bun i",
 		"publish-pkgs": "turbo run publish-pkg --concurrency=1 --output-logs new-only && changeset tag && git push --follow-tags",
 		"cloc": "cloc --exclude-dir=imports,dist $(git ls-files)"
 	},
