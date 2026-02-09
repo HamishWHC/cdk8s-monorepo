@@ -1,6 +1,6 @@
 {
 	"name": "cdk-typed-context",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"type": "module",
 	"private": false,
 	"scripts": {
@@ -10,11 +10,11 @@
 		"publish-pkg": "bun publish --tolerate-republish"
 	},
 	"dependencies": {
+		"@hamishwhc/cdk8s-monorepo-typescript-config": "workspace:*",
 		"constructs": "catalog:"
 	},
 	"devDependencies": {
 		"@hamishwhc/cdk8s-monorepo-eslint-config": "workspace:*",
-		"@hamishwhc/cdk8s-monorepo-typescript-config": "workspace:*",
 		"@hamishwhc/cdk8s-monorepo-utils": "workspace:*",
 		"tsdown": "catalog:",
 		"eslint": "catalog:",

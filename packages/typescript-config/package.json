@@ -1,5 +1,9 @@
 {
 	"name": "@hamishwhc/cdk8s-monorepo-typescript-config",
-	"version": "0.0.0",
-	"private": true
+	"version": "0.1.0",
+	"private": false,
+	"scripts": {
+		"dist": "echo Nothing to build.",
+		"publish-pkg": "bun publish --tolerate-republish --access public"
+	}
 }
