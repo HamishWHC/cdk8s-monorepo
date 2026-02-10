@@ -28,7 +28,7 @@ export type SynthCommand<Arguments extends ArgTypes> = ArgParser<Output<SynthDef
 	Partial<Versioned & Descriptive & Aliased>;
 
 export async function synthCommand<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes>(
-	config: Config<Arguments, Data, LocalArguments, { local: boolean; synth: true }>,
+	config: Config<Arguments, Data, LocalArguments, { synth: true }>,
 ): Promise<SynthCommand<Arguments>> {
 	return command({
 		name: config.subcommands.synth?.command?.name ?? "synth",

@@ -5,7 +5,7 @@ import type { Config } from "./config";
 export type { Command as LocalCommand } from "cdk8s-local";
 
 export async function localCommand<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes>(
-	config: Config<Arguments, Data, LocalArguments, { local: true; synth: boolean }>,
+	config: Config<Arguments, Data, LocalArguments, { local: true }>,
 ) {
 	return cdk8sLocalCommand<Arguments & LocalArguments, Data>({
 		synth: config.synth,

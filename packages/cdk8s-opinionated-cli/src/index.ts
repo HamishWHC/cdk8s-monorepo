@@ -1,6 +1,6 @@
 import type { ArgTypes } from "@hamishwhc/cdk8s-monorepo-utils/cmd-ts-types";
 import { binary, run, subcommands } from "cmd-ts";
-import type { Config } from "./config";
+import type { AnyEnabledCommands, Config } from "./config";
 import { localCommand, type LocalCommand } from "./local";
 import { synthCommand, type SynthCommand } from "./synth";
 
@@ -9,9 +9,9 @@ export type { Config } from "./config";
 export type Commands<
 	Arguments extends ArgTypes,
 	LocalArguments extends ArgTypes,
-	EnabledCommands extends { local: boolean; synth: boolean },
+	EnabledCommands extends AnyEnabledCommands,
 > = {
-	[K in keyof EnabledCommands as EnabledCommands[K] extends true ? K : never]: K extends "local"
+	[K in keyof EnabledCommands as EnabledCommands[K] extends false ? never : K]: K extends "local"
 		? LocalCommand<Arguments & LocalArguments>
 		: K extends "synth"
 			? SynthCommand<Arguments>
@@ -22,19 +22,19 @@ export async function cdk8sOpinionatedCliCommands<
 	Arguments extends ArgTypes,
 	Data,
 	LocalArguments extends ArgTypes,
-	EnabledCommands extends { local: boolean; synth: boolean },
+	EnabledCommands extends AnyEnabledCommands,
 >(
 	config: Config<Arguments, Data, LocalArguments, EnabledCommands>,
 ): Promise<Commands<Arguments, LocalArguments, EnabledCommands>> {
 	return {
 		...(config.subcommands.local?.enabled === true
 			? {
-					local: await localCommand(config as Config<Arguments, Data, LocalArguments, { local: true; synth: boolean }>),
+					local: await localCommand(config as Config<Arguments, Data, LocalArguments, { local: true }>),
 				}
 			: {}),
 		...(config.subcommands.synth?.enabled !== false
 			? {
-					synth: await synthCommand(config as Config<Arguments, Data, LocalArguments, { local: boolean; synth: true }>),
+					synth: await synthCommand(config as Config<Arguments, Data, LocalArguments, { synth: true }>),
 				}
 			: {}),
 	} as Commands<Arguments, LocalArguments, EnabledCommands>;

@@ -5,8 +5,6 @@ import type { PickPartial } from "@hamishwhc/cdk8s-monorepo-utils/pick-partial";
 import type { App } from "cdk8s";
 import { Config as LocalConfig } from "cdk8s-local";
 
-type FeatureToggle<T extends object> = { enabled: false } | ({ enabled: true } & T);
-
 export interface SynthConfig {
 	/**
 	 * Optional configuration for the generated `cmd-ts` subcommand.
@@ -23,11 +21,13 @@ export interface SynthConfig {
 	};
 }
 
+export type AnyEnabledCommands = { local?: boolean; synth?: boolean };
+
 export interface Config<
 	Arguments extends ArgTypes,
 	Data,
 	LocalArguments extends ArgTypes,
-	EnabledCommands extends { local: boolean; synth: boolean } = { local: true; synth: true },
+	EnabledCommands extends AnyEnabledCommands = { local: true; synth: true },
 > {
 	/**
 	 * `cmd-ts` argument definitions for the CLI. This will be merged with the default arguments provided by `cdk8s-opinionated-cli`,
@@ -64,15 +64,14 @@ export interface Config<
 		/**
 		 * Optional configuration for the `synth` subcommand.
 		 */
-		synth?: Extract<FeatureToggle<SynthConfig>, { enabled: EnabledCommands["synth"] }>;
+		synth?: EnabledCommands["synth"] extends false ? { enabled: false } : { enabled: true } & SynthConfig;
 		/**
 		 * Optional configuration for the `local` command. `args` and `synth` are inherited from the main config,
 		 * but can be extended here.
 		 */
-		local?: Extract<
-			FeatureToggle<PickPartial<LocalConfig<LocalArguments, Data, Arguments>, "synth">>,
-			{ enabled: EnabledCommands["local"] }
-		>;
+		local?: EnabledCommands["local"] extends false
+			? { enabled: false }
+			: { enabled: true } & PickPartial<LocalConfig<LocalArguments, Data, Arguments>, "synth">;
 	};
 
 	/**
