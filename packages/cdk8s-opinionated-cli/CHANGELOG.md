@@ -1,5 +1,17 @@
 # cdk8s-opinionated-cli
 
+## 0.4.0
+
+### Minor Changes
+
+- 0460d59: Changed `cdk8sOpinionatedCliCommand` to return the command object, so that it can be integrated into a `cmd-ts` `subcommands` function alongside other commands.
+
+### Patch Changes
+
+- bd617c1: Enabled command types cleanup.
+- Updated dependencies [0460d59]
+  - cdk8s-local@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

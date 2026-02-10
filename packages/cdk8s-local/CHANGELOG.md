@@ -1,5 +1,11 @@
 # cdk8s-local
 
+## 0.3.1
+
+### Patch Changes
+
+- 0460d59: Changed `cdk8sOpinionatedCliCommand` to return the command object, so that it can be integrated into a `cmd-ts` `subcommands` function alongside other commands.
+
 ## 0.3.0
 
 ### Minor Changes
