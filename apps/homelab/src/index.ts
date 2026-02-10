@@ -22,7 +22,6 @@ export const synth = async (options: SynthOptions) => {
 
 	new RootConstruct(app, {
 		...options,
-		defaultNamespaceName: "default",
 		defaultChartProps: {
 			disableResourceNameHashes: true,
 		},

@@ -1,9 +1,9 @@
+import { createContext } from "cdk-typed-context";
 import { type ChartProps } from "cdk8s";
 import { Construct } from "constructs";
 import { ImageBuilder, setupImageBuilderContext } from "../constructs/image-builder";
 import { setupConfigContext, type Config } from "../schema/config";
 import { commonLabels } from "../utils/common-metadata";
-import { createContext } from "cdk-typed-context";
 import { setupEnvironmentContext, type Environment } from "../utils/environment";
 import { AppsChartsConstruct } from "./apps";
 import { CoreChartsConstruct } from "./core";
@@ -20,8 +20,8 @@ export function getRootConstruct(scope: Construct): RootConstruct {
 export interface RootConstructProps {
 	config: Config;
 	environment: Environment;
-	defaultChartProps: ChartProps;
-	defaultNamespaceName: string;
+	defaultChartProps?: ChartProps;
+	defaultNamespaceName?: string;
 }
 
 export class RootConstruct extends Construct {
@@ -36,7 +36,7 @@ export class RootConstruct extends Construct {
 
 		defaultChartProps = {
 			...defaultChartProps,
-			labels: { ...commonLabels.cdk(), ...defaultChartProps.labels },
+			labels: { ...commonLabels.cdk(), ...defaultChartProps?.labels },
 		};
 
 		RootConstructContext.set(this, this);

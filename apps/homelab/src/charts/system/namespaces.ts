@@ -1,10 +1,10 @@
+import { createContext } from "cdk-typed-context";
 import { Chart, type ApiObjectMetadata, type ChartProps } from "cdk8s";
 import { Namespace } from "cdk8s-plus-32";
 import type { Construct } from "constructs";
-import { createContext } from "cdk-typed-context";
 
 export interface NamespacesChartContextOptions {
-	defaultNamespaceName: string;
+	defaultNamespaceName?: string;
 }
 
 export const NamespacesChartContext = createContext<{ chart: NamespacesChart | null } & NamespacesChartContextOptions>(
@@ -47,7 +47,7 @@ export class NamespacesChart extends Chart {
 
 	addNamespace(scope: Construct, metadata: ApiObjectMetadata) {
 		const ctx = NamespacesChartContext.get(scope);
-		const name = metadata.name ?? ctx.defaultNamespaceName;
+		const name = metadata.name ?? ctx.defaultNamespaceName ?? "default";
 
 		if (!(name in this.namespaces) && name !== "default") {
 			let chart: Chart | null;
