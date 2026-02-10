@@ -3,13 +3,16 @@ import { logger } from "@hamishwhc/cdk8s-monorepo-utils/logger";
 import { resolveThunk } from "@hamishwhc/cdk8s-monorepo-utils/thunk";
 import { $ } from "bun";
 import { KbldConfig } from "cdk8s-kbld2";
-import { binary, command, run } from "cmd-ts";
+import { binary, command, run, type Runner } from "cmd-ts";
+import type { ArgParser } from "cmd-ts/dist/cjs/argparser";
+import type { Output } from "cmd-ts/dist/cjs/command";
+import type { Aliased, Descriptive, Named, PrintHelp, ProvidesHelp, Versioned } from "cmd-ts/dist/cjs/helpdoc";
 import { ConstructOrder } from "constructs";
 import { rm } from "fs/promises";
 import isWsl from "is-wsl";
 import path from "path";
 import type { Config } from "./config";
-import { defaultArgs } from "./default-args";
+import { defaultArgs, type DefaultArgs } from "./default-args";
 import { getK3dNodes } from "./get-k3d-nodes";
 import { getRegistry } from "./get-registry";
 import { resolveK3dConfig, type K3dConfigResolution } from "./k3d-config";
@@ -27,14 +30,23 @@ export type {
 	K3sArg,
 	Port,
 } from "./k3d-config";
-export { CommonRequirements, Config, isWsl };
+export { CommonRequirements, Config, DefaultArgs, isWsl };
+
+export type Command<Arguments extends ArgTypes> = ArgParser<Output<DefaultArgs & Arguments>> &
+	PrintHelp &
+	ProvidesHelp &
+	Named &
+	Runner<Output<DefaultArgs & Arguments>, Promise<number | undefined>> &
+	Partial<Versioned & Descriptive & Aliased>;
 
 /**
  * Creates a cdk8s-local CLI command based on the provided configuration.
  *
  * Unless you want to integrate a cdk8s-local command into an existing cmd-ts CLI, you probably want to use `cdk8sLocal` instead.
  */
-export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(config: Config<Arguments, Data>) {
+export function cdk8sLocalCommand<Arguments extends ArgTypes, Data>(
+	config: Config<Arguments, Data>,
+): Command<Arguments> {
 	return command({
 		name: config.command?.name ?? "local",
 		description:

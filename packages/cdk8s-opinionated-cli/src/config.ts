@@ -23,7 +23,12 @@ export interface SynthConfig {
 	};
 }
 
-export interface Config<Arguments extends ArgTypes, Data, LocalArguments extends ArgTypes> {
+export interface Config<
+	Arguments extends ArgTypes,
+	Data,
+	LocalArguments extends ArgTypes,
+	EnabledCommands extends { local: boolean; synth: boolean } = { local: true; synth: true },
+> {
 	/**
 	 * `cmd-ts` argument definitions for the CLI. This will be merged with the default arguments provided by `cdk8s-opinionated-cli`,
 	 * and passed to your hooks and synth function.
@@ -59,12 +64,15 @@ export interface Config<Arguments extends ArgTypes, Data, LocalArguments extends
 		/**
 		 * Optional configuration for the `synth` subcommand.
 		 */
-		synth?: FeatureToggle<SynthConfig>;
+		synth?: Extract<FeatureToggle<SynthConfig>, { enabled: EnabledCommands["synth"] }>;
 		/**
 		 * Optional configuration for the `local` command. `args` and `synth` are inherited from the main config,
 		 * but can be extended here.
 		 */
-		local?: FeatureToggle<PickPartial<LocalConfig<LocalArguments, Data, Arguments>, "synth">>;
+		local?: Extract<
+			FeatureToggle<PickPartial<LocalConfig<LocalArguments, Data, Arguments>, "synth">>,
+			{ enabled: EnabledCommands["local"] }
+		>;
 	};
 
 	/**
