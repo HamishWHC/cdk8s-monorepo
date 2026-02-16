@@ -174,7 +174,7 @@ export interface PlatformSelection {
 	features: string[];
 }
 
-export interface Source {
+export interface BaseSource {
 	/**
 	 * Exact value found while searching for container image references.
 	 */
@@ -183,15 +183,10 @@ export interface Source {
 	 * Filesystem path to the source for the to-be-built image. This path also acts as the container file context; therefore, any paths in the container file (when one is present) must be relative to the value of the field `path`.
 	 */
 	path: string;
-	/**
-	 * Name/configure a specific image builder tool.
-	 *
-	 * @default {docker: {}}
-	 */
-	builder?: Builder;
 }
 
 export type Builder = DockerBuilder | PackBuilder | KubectlBuildKitBuilder | KoBuilder | BazelBuilder;
+export type Source = BaseSource & Builder;
 
 export interface DockerBuilder {
 	docker:

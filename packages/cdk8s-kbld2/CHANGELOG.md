@@ -1,5 +1,11 @@
 # cdk8s-kbld2
 
+## 0.4.0
+
+### Minor Changes
+
+- Fix types - builder is not a nested key. This has been broken for 9 months...
+
 ## 0.3.0
 
 ### Minor Changes

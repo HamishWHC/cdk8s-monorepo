@@ -1,5 +1,13 @@
 # cdk8s-opinionated-cli
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies
+  - cdk8s-kbld2@0.4.0
+  - cdk8s-local@0.3.2
+
 ## 0.4.0
 
 ### Minor Changes

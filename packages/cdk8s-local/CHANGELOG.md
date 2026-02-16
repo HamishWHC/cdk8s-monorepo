@@ -1,5 +1,12 @@
 # cdk8s-local
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies
+  - cdk8s-kbld2@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
